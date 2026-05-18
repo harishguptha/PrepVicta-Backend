@@ -1,0 +1,2732 @@
+[
+  {
+    "subject": "Botany",
+    "chapter": "Diversity in Living World",
+    "topic": "Taxonomy",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Diversity in Living World",
+    "topic": "Nomenclature",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Diversity in Living World",
+    "topic": "3-domain system",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Diversity in Living World",
+    "topic": "5-kingdom classification",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Diversity in Living World",
+    "topic": "Taxonomic keys",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biological Classification",
+    "topic": "Monera characteristics & examples",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biological Classification",
+    "topic": "Protista characteristics & examples",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biological Classification",
+    "topic": "Fungi characteristics & examples",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biological Classification",
+    "topic": "Plantae characteristics & examples",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biological Classification",
+    "topic": "Animalia characteristics & examples",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Plant Kingdom",
+    "topic": "Algae",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Plant Kingdom",
+    "topic": "Bryophytes",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Plant Kingdom",
+    "topic": "Pteridophytes",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Plant Kingdom",
+    "topic": "Gymnosperms",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Plant Kingdom",
+    "topic": "Angiosperms",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Plant Kingdom",
+    "topic": "Alternation of generations",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Animal Kingdom",
+    "topic": "Phylum classification",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Animal Kingdom",
+    "topic": "Coelom",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Animal Kingdom",
+    "topic": "Symmetry",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Animal Kingdom",
+    "topic": "Notochord",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Animal Kingdom",
+    "topic": "Animal examples per phylum",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Morphology of Flowering Plants",
+    "topic": "Root modifications",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Morphology of Flowering Plants",
+    "topic": "Stem modifications",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Morphology of Flowering Plants",
+    "topic": "Leaf modifications",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Morphology of Flowering Plants",
+    "topic": "Flower morphology",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Morphology of Flowering Plants",
+    "topic": "Fruit morphology",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Morphology of Flowering Plants",
+    "topic": "Seed morphology",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Anatomy of Flowering Plants",
+    "topic": "Tissue types",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Anatomy of Flowering Plants",
+    "topic": "Cross-sections of root",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Anatomy of Flowering Plants",
+    "topic": "Cross-sections of stem",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Anatomy of Flowering Plants",
+    "topic": "Cross-sections of leaf",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Anatomy of Flowering Plants",
+    "topic": "Secondary growth",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Cell \u00e2\u20ac\u201c Structure & Functions",
+    "topic": "Prokaryote vs eukaryote",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Cell \u00e2\u20ac\u201c Structure & Functions",
+    "topic": "Cell organelles",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Cell \u00e2\u20ac\u201c Structure & Functions",
+    "topic": "Cell wall",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Cell \u00e2\u20ac\u201c Structure & Functions",
+    "topic": "Endomembrane system",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biomolecules",
+    "topic": "Carbohydrates structure & function",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biomolecules",
+    "topic": "Proteins structure & function",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biomolecules",
+    "topic": "Lipids structure & function",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biomolecules",
+    "topic": "Enzymes structure & function",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Cell Cycle & Cell Division",
+    "topic": "Mitosis phases",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Cell Cycle & Cell Division",
+    "topic": "Meiosis phases",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Cell Cycle & Cell Division",
+    "topic": "Cell cycle checkpoints",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Cell Cycle & Cell Division",
+    "topic": "Significance of cell division",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Photosynthesis in Higher Plants",
+    "topic": "Light reactions",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Photosynthesis in Higher Plants",
+    "topic": "Dark reactions (Calvin cycle)",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Photosynthesis in Higher Plants",
+    "topic": "C3 pathway",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Photosynthesis in Higher Plants",
+    "topic": "C4 pathway",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Photosynthesis in Higher Plants",
+    "topic": "CAM pathway",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Photosynthesis in Higher Plants",
+    "topic": "Photophosphorylation",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Photosynthesis in Higher Plants",
+    "topic": "Photorespiration",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Respiration in Plants",
+    "topic": "Glycolysis",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Respiration in Plants",
+    "topic": "Krebs cycle",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Respiration in Plants",
+    "topic": "Electron Transport Chain (ETC)",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Respiration in Plants",
+    "topic": "Fermentation",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Respiration in Plants",
+    "topic": "Energy accounting (ATP)",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Plant Growth & Development",
+    "topic": "Meristems",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Plant Growth & Development",
+    "topic": "Auxin",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Plant Growth & Development",
+    "topic": "Cytokinin",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Plant Growth & Development",
+    "topic": "Gibberellic acid (GA)",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Plant Growth & Development",
+    "topic": "Abscisic acid (ABA)",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Plant Growth & Development",
+    "topic": "Ethylene",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Plant Growth & Development",
+    "topic": "Photoperiodism",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Sexual Reproduction in Flowering Plants",
+    "topic": "Flower structure",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Sexual Reproduction in Flowering Plants",
+    "topic": "Microsporogenesis",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Sexual Reproduction in Flowering Plants",
+    "topic": "Embryo sac",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Sexual Reproduction in Flowering Plants",
+    "topic": "Pollination",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Sexual Reproduction in Flowering Plants",
+    "topic": "Double fertilisation",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Sexual Reproduction in Flowering Plants",
+    "topic": "Endosperm",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Principles of Inheritance & Variation",
+    "topic": "Mendel's laws",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Principles of Inheritance & Variation",
+    "topic": "Dihybrid cross",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Principles of Inheritance & Variation",
+    "topic": "Sex determination",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Principles of Inheritance & Variation",
+    "topic": "Linkage",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Principles of Inheritance & Variation",
+    "topic": "Mutation",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Principles of Inheritance & Variation",
+    "topic": "Pedigree analysis",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Molecular Basis of Inheritance",
+    "topic": "DNA structure",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Molecular Basis of Inheritance",
+    "topic": "DNA replication",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Molecular Basis of Inheritance",
+    "topic": "Transcription",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Molecular Basis of Inheritance",
+    "topic": "Translation",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Molecular Basis of Inheritance",
+    "topic": "Lac operon",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Molecular Basis of Inheritance",
+    "topic": "Human Genome Project (HGP)",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Evolution",
+    "topic": "Darwin's theory of natural selection",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Evolution",
+    "topic": "Hardy-Weinberg principle",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Evolution",
+    "topic": "Origin of life",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Evolution",
+    "topic": "Speciation",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biotechnology \u00e2\u20ac\u201c Principles & Processes",
+    "topic": "rDNA technology",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biotechnology \u00e2\u20ac\u201c Principles & Processes",
+    "topic": "Restriction enzymes",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biotechnology \u00e2\u20ac\u201c Principles & Processes",
+    "topic": "PCR",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biotechnology \u00e2\u20ac\u201c Principles & Processes",
+    "topic": "Gel electrophoresis",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biotechnology \u00e2\u20ac\u201c Principles & Processes",
+    "topic": "Vectors",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biotechnology & its Applications",
+    "topic": "GM crops",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biotechnology & its Applications",
+    "topic": "Bt cotton",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biotechnology & its Applications",
+    "topic": "Gene therapy",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biotechnology & its Applications",
+    "topic": "Insulin production",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biotechnology & its Applications",
+    "topic": "Diagnostics",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biotechnology & its Applications",
+    "topic": "Bioethics",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Organisms & Populations",
+    "topic": "Population growth",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Organisms & Populations",
+    "topic": "Natality and mortality",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Organisms & Populations",
+    "topic": "Logistic growth",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Organisms & Populations",
+    "topic": "Ecological interactions",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Ecosystem",
+    "topic": "Energy flow",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Ecosystem",
+    "topic": "Food chains and food webs",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Ecosystem",
+    "topic": "Ecological pyramids",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Ecosystem",
+    "topic": "Nutrient cycling",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Ecosystem",
+    "topic": "Ecological succession",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biodiversity & Conservation",
+    "topic": "Types of biodiversity",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biodiversity & Conservation",
+    "topic": "Biodiversity hot spots",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biodiversity & Conservation",
+    "topic": "Threats to biodiversity",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biodiversity & Conservation",
+    "topic": "In-situ conservation",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biodiversity & Conservation",
+    "topic": "Ex-situ conservation",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Botany",
+    "chapter": "Biodiversity & Conservation",
+    "topic": "Red Data Book",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Structural Organisation in Animals",
+    "topic": "Epithelium tissue",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Structural Organisation in Animals",
+    "topic": "Connective tissue",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Structural Organisation in Animals",
+    "topic": "Muscular tissue",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Structural Organisation in Animals",
+    "topic": "Nervous tissue",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Structural Organisation in Animals",
+    "topic": "Organs and organ systems",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Breathing & Exchange of Gases",
+    "topic": "Respiratory organs",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Breathing & Exchange of Gases",
+    "topic": "Pulmonary ventilation",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Breathing & Exchange of Gases",
+    "topic": "Oxygen transport",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Breathing & Exchange of Gases",
+    "topic": "Carbon dioxide transport",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Breathing & Exchange of Gases",
+    "topic": "Respiratory disorders",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Body Fluids & Circulation",
+    "topic": "Blood composition",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Body Fluids & Circulation",
+    "topic": "Cardiac cycle",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Body Fluids & Circulation",
+    "topic": "ECG",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Body Fluids & Circulation",
+    "topic": "Blood pressure",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Body Fluids & Circulation",
+    "topic": "Lymph",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Body Fluids & Circulation",
+    "topic": "Circulatory disorders",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Excretory Products & Elimination",
+    "topic": "Kidney structure",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Excretory Products & Elimination",
+    "topic": "Nephron",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Excretory Products & Elimination",
+    "topic": "Filtration",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Excretory Products & Elimination",
+    "topic": "Reabsorption",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Excretory Products & Elimination",
+    "topic": "Secretion",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Excretory Products & Elimination",
+    "topic": "Excretory disorders",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Locomotion & Movement",
+    "topic": "Muscle types",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Locomotion & Movement",
+    "topic": "Sarcomere",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Locomotion & Movement",
+    "topic": "Sliding filament theory",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Locomotion & Movement",
+    "topic": "Bone joints",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Locomotion & Movement",
+    "topic": "Movement disorders",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Neural Control & Coordination",
+    "topic": "Neuron structure",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Neural Control & Coordination",
+    "topic": "Resting potential",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Neural Control & Coordination",
+    "topic": "Action potential",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Neural Control & Coordination",
+    "topic": "Synapse",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Neural Control & Coordination",
+    "topic": "Reflex arc",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Neural Control & Coordination",
+    "topic": "Brain regions",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Chemical Coordination & Integration",
+    "topic": "Hypothalamus-pituitary axis",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Chemical Coordination & Integration",
+    "topic": "Hormones",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Chemical Coordination & Integration",
+    "topic": "Target organs",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Chemical Coordination & Integration",
+    "topic": "Feedback mechanisms",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Chemical Coordination & Integration",
+    "topic": "Endocrine disorders",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Human Reproduction",
+    "topic": "Male reproductive organs",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Human Reproduction",
+    "topic": "Female reproductive organs",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Human Reproduction",
+    "topic": "Gametogenesis",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Human Reproduction",
+    "topic": "Menstrual cycle",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Human Reproduction",
+    "topic": "Fertilisation",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Human Reproduction",
+    "topic": "Foetal development",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Reproductive Health",
+    "topic": "Contraceptive methods",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Reproductive Health",
+    "topic": "STDs",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Reproductive Health",
+    "topic": "Infertility",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Reproductive Health",
+    "topic": "Assisted Reproductive Technology (ART)",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Reproductive Health",
+    "topic": "MTP",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Reproductive Health",
+    "topic": "Amniocentesis",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Human Health & Disease",
+    "topic": "Innate immunity",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Human Health & Disease",
+    "topic": "Acquired immunity",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Human Health & Disease",
+    "topic": "Vaccines",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Human Health & Disease",
+    "topic": "Pathogens",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Human Health & Disease",
+    "topic": "Cancer",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Human Health & Disease",
+    "topic": "Drugs and alcohol",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Microbes in Human Welfare",
+    "topic": "Fermentation",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Microbes in Human Welfare",
+    "topic": "Antibiotics",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Microbes in Human Welfare",
+    "topic": "Sewage treatment",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Microbes in Human Welfare",
+    "topic": "Biogas production",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Zoology",
+    "chapter": "Microbes in Human Welfare",
+    "topic": "Biocontrol agents",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Some Basic Concepts of Chemistry",
+    "topic": "Mole concept",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Some Basic Concepts of Chemistry",
+    "topic": "Stoichiometry",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Some Basic Concepts of Chemistry",
+    "topic": "Empirical formula",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Some Basic Concepts of Chemistry",
+    "topic": "Molecular formula",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Structure of Atom",
+    "topic": "Quantum numbers",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Structure of Atom",
+    "topic": "Orbital shapes",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Structure of Atom",
+    "topic": "Aufbau rule",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Structure of Atom",
+    "topic": "Hund's rule",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Structure of Atom",
+    "topic": "Pauli exclusion principle",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Structure of Atom",
+    "topic": "Electronic configuration",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Classification of Elements & Periodicity",
+    "topic": "Ionization energy (IE) trends",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Classification of Elements & Periodicity",
+    "topic": "Electron affinity (EA) trends",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Classification of Elements & Periodicity",
+    "topic": "Electronegativity (EN) trends",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Classification of Elements & Periodicity",
+    "topic": "Atomic radius trends",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Classification of Elements & Periodicity",
+    "topic": "Metallic character trends",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Chemical Bonding & Molecular Structure",
+    "topic": "VSEPR theory",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Chemical Bonding & Molecular Structure",
+    "topic": "Hybridisation",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Chemical Bonding & Molecular Structure",
+    "topic": "MO theory",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Chemical Bonding & Molecular Structure",
+    "topic": "Hydrogen bonding",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Chemical Bonding & Molecular Structure",
+    "topic": "Valence Bond Theory (VBT)",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Thermodynamics",
+    "topic": "Enthalpy",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Thermodynamics",
+    "topic": "Hess's law",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Thermodynamics",
+    "topic": "Entropy",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Thermodynamics",
+    "topic": "Gibbs free energy",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Thermodynamics",
+    "topic": "Spontaneity",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Equilibrium",
+    "topic": "Kc (equilibrium constant)",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Equilibrium",
+    "topic": "Kp (equilibrium constant)",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Equilibrium",
+    "topic": "Le Chatelier's principle",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Equilibrium",
+    "topic": "pH",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Equilibrium",
+    "topic": "Buffer",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Equilibrium",
+    "topic": "Solubility product",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Redox Reactions",
+    "topic": "Oxidation state",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Redox Reactions",
+    "topic": "Balancing redox equations",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Redox Reactions",
+    "topic": "Disproportionation",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Organic Chemistry \u00e2\u20ac\u201c Basic Principles",
+    "topic": "IUPAC nomenclature (organic)",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Organic Chemistry \u00e2\u20ac\u201c Basic Principles",
+    "topic": "Inductive effect",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Organic Chemistry \u00e2\u20ac\u201c Basic Principles",
+    "topic": "Mesomeric effect",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Organic Chemistry \u00e2\u20ac\u201c Basic Principles",
+    "topic": "Reaction intermediates",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Organic Chemistry \u00e2\u20ac\u201c Basic Principles",
+    "topic": "Acidity of organic compounds",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Hydrocarbons",
+    "topic": "Alkanes reactions",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Hydrocarbons",
+    "topic": "Alkenes reactions",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Hydrocarbons",
+    "topic": "Alkynes reactions",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Hydrocarbons",
+    "topic": "Aromaticity",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Hydrocarbons",
+    "topic": "Markovnikov's rule",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Solutions",
+    "topic": "Molarity",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Solutions",
+    "topic": "Mole fraction",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Solutions",
+    "topic": "Raoult's law",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Solutions",
+    "topic": "Colligative properties",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Solutions",
+    "topic": "Osmosis",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Electrochemistry",
+    "topic": "EMF",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Electrochemistry",
+    "topic": "Nernst equation",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Electrochemistry",
+    "topic": "Electrolysis",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Electrochemistry",
+    "topic": "Faraday's laws",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Electrochemistry",
+    "topic": "Conductance",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Chemical Kinetics",
+    "topic": "Rate laws",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Chemical Kinetics",
+    "topic": "Order of reaction",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Chemical Kinetics",
+    "topic": "Arrhenius equation",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Chemical Kinetics",
+    "topic": "Reaction mechanisms",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "d & f Block Elements",
+    "topic": "Transition metals",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "d & f Block Elements",
+    "topic": "Colour of transition metals",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "d & f Block Elements",
+    "topic": "Magnetic properties",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "d & f Block Elements",
+    "topic": "Lanthanides",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "d & f Block Elements",
+    "topic": "Actinides",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Coordination Compounds",
+    "topic": "IUPAC nomenclature",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Coordination Compounds",
+    "topic": "Isomerism",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Coordination Compounds",
+    "topic": "Valence Bond Theory (VBT)",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Coordination Compounds",
+    "topic": "Crystal Field Theory (CFT)",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Coordination Compounds",
+    "topic": "Spectrochemical series",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Haloalkanes & Haloarenes",
+    "topic": "SN1 mechanism",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Haloalkanes & Haloarenes",
+    "topic": "SN2 mechanism",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Haloalkanes & Haloarenes",
+    "topic": "Optical isomerism",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Haloalkanes & Haloarenes",
+    "topic": "Elimination reactions",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Alcohols, Phenols & Ethers",
+    "topic": "Preparation of alcohols, phenols & ethers",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Alcohols, Phenols & Ethers",
+    "topic": "Properties of alcohols, phenols & ethers",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Alcohols, Phenols & Ethers",
+    "topic": "Distinguishing tests",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Alcohols, Phenols & Ethers",
+    "topic": "Reactions",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Aldehydes, Ketones & Carboxylic Acids",
+    "topic": "Nucleophilic addition",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Aldehydes, Ketones & Carboxylic Acids",
+    "topic": "Cannizzaro reaction",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Aldehydes, Ketones & Carboxylic Acids",
+    "topic": "Aldol condensation",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Aldehydes, Ketones & Carboxylic Acids",
+    "topic": "Esterification",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Aldehydes, Ketones & Carboxylic Acids",
+    "topic": "Acidity of carboxylic acids",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Amines",
+    "topic": "Classification of amines",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Amines",
+    "topic": "Basicity of amines",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Amines",
+    "topic": "Hinsberg test",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Amines",
+    "topic": "Diazonium salts",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Amines",
+    "topic": "Coupling reactions",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Biomolecules",
+    "topic": "Carbohydrates",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Biomolecules",
+    "topic": "Proteins",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Biomolecules",
+    "topic": "Lipids",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Biomolecules",
+    "topic": "Nucleic acids",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Biomolecules",
+    "topic": "Vitamins",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Chemistry",
+    "chapter": "Biomolecules",
+    "topic": "Enzymes",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Units & Measurement",
+    "topic": "SI units",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Units & Measurement",
+    "topic": "Dimensional analysis",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Units & Measurement",
+    "topic": "Significant figures",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Units & Measurement",
+    "topic": "Errors in measurement",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Motion in a Straight Line",
+    "topic": "Kinematics",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Motion in a Straight Line",
+    "topic": "Velocity",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Motion in a Straight Line",
+    "topic": "Acceleration",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Motion in a Straight Line",
+    "topic": "Equations of motion",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Motion in a Straight Line",
+    "topic": "Motion graphs",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Motion in a Plane",
+    "topic": "Vectors",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Motion in a Plane",
+    "topic": "Projectile motion",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Motion in a Plane",
+    "topic": "Relative motion",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Motion in a Plane",
+    "topic": "Circular motion",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Laws of Motion",
+    "topic": "Newton's first law",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Laws of Motion",
+    "topic": "Newton's second law",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Laws of Motion",
+    "topic": "Newton's third law",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Laws of Motion",
+    "topic": "Friction",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Laws of Motion",
+    "topic": "Pulley systems",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Laws of Motion",
+    "topic": "Pseudo force",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Work, Energy & Power",
+    "topic": "Work-energy theorem",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Work, Energy & Power",
+    "topic": "Potential energy (PE)",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Work, Energy & Power",
+    "topic": "Kinetic energy (KE)",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Work, Energy & Power",
+    "topic": "Conservation of energy",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Work, Energy & Power",
+    "topic": "Elastic collision",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Work, Energy & Power",
+    "topic": "Inelastic collision",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "System of Particles & Rotation",
+    "topic": "Centre of mass",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "System of Particles & Rotation",
+    "topic": "Torque",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "System of Particles & Rotation",
+    "topic": "Angular momentum",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "System of Particles & Rotation",
+    "topic": "Moment of inertia",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "System of Particles & Rotation",
+    "topic": "Rolling motion",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Gravitation",
+    "topic": "Kepler's laws",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Gravitation",
+    "topic": "Gravitational potential energy",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Gravitation",
+    "topic": "Satellite motion",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Gravitation",
+    "topic": "Escape velocity",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Mechanical Properties of Solids",
+    "topic": "Stress",
+    "priority": "GOOD",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Mechanical Properties of Solids",
+    "topic": "Strain",
+    "priority": "GOOD",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Mechanical Properties of Solids",
+    "topic": "Young's modulus",
+    "priority": "GOOD",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Mechanical Properties of Solids",
+    "topic": "Elastic moduli",
+    "priority": "GOOD",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Mechanical Properties of Fluids",
+    "topic": "Pressure in fluids",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Mechanical Properties of Fluids",
+    "topic": "Bernoulli's principle",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Mechanical Properties of Fluids",
+    "topic": "Viscosity",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Mechanical Properties of Fluids",
+    "topic": "Surface tension",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Mechanical Properties of Fluids",
+    "topic": "Capillarity",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Thermal Properties of Matter",
+    "topic": "Thermal expansion",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Thermal Properties of Matter",
+    "topic": "Specific heat",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Thermal Properties of Matter",
+    "topic": "Calorimetry",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Thermal Properties of Matter",
+    "topic": "Heat transfer",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Thermodynamics",
+    "topic": "Laws of thermodynamics",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Thermodynamics",
+    "topic": "Thermodynamic processes",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Thermodynamics",
+    "topic": "Efficiency",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Thermodynamics",
+    "topic": "Entropy",
+    "priority": "MUST DO",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Kinetic Theory",
+    "topic": "KTG postulates",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Kinetic Theory",
+    "topic": "RMS speed",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Kinetic Theory",
+    "topic": "Mean free path",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Kinetic Theory",
+    "topic": "Degrees of freedom",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Oscillations",
+    "topic": "Simple harmonic motion (SHM)",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Oscillations",
+    "topic": "Springs",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Oscillations",
+    "topic": "Pendulum",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Oscillations",
+    "topic": "Energy in SHM",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Oscillations",
+    "topic": "Resonance",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Waves",
+    "topic": "Wave equations",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Waves",
+    "topic": "Superposition",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Waves",
+    "topic": "Standing waves",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Waves",
+    "topic": "Doppler effect",
+    "priority": "HIGH",
+    "class": "Class 11"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electric Charges & Fields",
+    "topic": "Coulomb's law",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electric Charges & Fields",
+    "topic": "Electric field",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electric Charges & Fields",
+    "topic": "Gauss's law",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electric Charges & Fields",
+    "topic": "Electric dipole",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electrostatic Potential & Capacitance",
+    "topic": "Electric potential",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electrostatic Potential & Capacitance",
+    "topic": "Equipotential surfaces",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electrostatic Potential & Capacitance",
+    "topic": "Capacitors",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electrostatic Potential & Capacitance",
+    "topic": "Dielectric",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electrostatic Potential & Capacitance",
+    "topic": "Energy stored in capacitor",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Current Electricity",
+    "topic": "Ohm's law",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Current Electricity",
+    "topic": "Kirchhoff's laws",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Current Electricity",
+    "topic": "Wheatstone bridge",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Current Electricity",
+    "topic": "RC circuit",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Moving Charges & Magnetism",
+    "topic": "Biot-Savart law",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Moving Charges & Magnetism",
+    "topic": "Ampere's law",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Moving Charges & Magnetism",
+    "topic": "Cyclotron",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Moving Charges & Magnetism",
+    "topic": "Galvanometer conversion",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Magnetism & Matter",
+    "topic": "Magnetic dipole",
+    "priority": "GOOD",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Magnetism & Matter",
+    "topic": "B-H curve",
+    "priority": "GOOD",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Magnetism & Matter",
+    "topic": "Diamagnetism",
+    "priority": "GOOD",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Magnetism & Matter",
+    "topic": "Paramagnetism",
+    "priority": "GOOD",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Magnetism & Matter",
+    "topic": "Ferromagnetism",
+    "priority": "GOOD",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electromagnetic Induction",
+    "topic": "Faraday's laws",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electromagnetic Induction",
+    "topic": "Lenz's law",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electromagnetic Induction",
+    "topic": "Mutual inductance",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electromagnetic Induction",
+    "topic": "Self inductance",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electromagnetic Induction",
+    "topic": "Eddy currents",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Alternating Current",
+    "topic": "RMS values",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Alternating Current",
+    "topic": "Phasor",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Alternating Current",
+    "topic": "LCR circuit",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Alternating Current",
+    "topic": "Resonance in AC",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Alternating Current",
+    "topic": "Transformer",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Alternating Current",
+    "topic": "Power factor",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electromagnetic Waves",
+    "topic": "Maxwell's equations",
+    "priority": "GOOD",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electromagnetic Waves",
+    "topic": "EM spectrum",
+    "priority": "GOOD",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Electromagnetic Waves",
+    "topic": "Properties of EM waves",
+    "priority": "GOOD",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Ray Optics & Optical Instruments",
+    "topic": "Reflection",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Ray Optics & Optical Instruments",
+    "topic": "Refraction",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Ray Optics & Optical Instruments",
+    "topic": "Lenses",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Ray Optics & Optical Instruments",
+    "topic": "Microscope",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Ray Optics & Optical Instruments",
+    "topic": "Telescope",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Ray Optics & Optical Instruments",
+    "topic": "Total internal reflection (TIR)",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Wave Optics",
+    "topic": "Interference",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Wave Optics",
+    "topic": "Diffraction",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Wave Optics",
+    "topic": "Polarisation",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Wave Optics",
+    "topic": "Young's double slit experiment (YDSE)",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Dual Nature of Radiation & Matter",
+    "topic": "Photoelectric effect",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Dual Nature of Radiation & Matter",
+    "topic": "de Broglie wavelength",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Dual Nature of Radiation & Matter",
+    "topic": "Davisson-Germer experiment",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Atoms",
+    "topic": "Bohr model",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Atoms",
+    "topic": "Spectral series",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Atoms",
+    "topic": "Hydrogen spectrum",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Nuclei",
+    "topic": "Nuclear binding energy",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Nuclei",
+    "topic": "Radioactivity",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Nuclei",
+    "topic": "Nuclear fission",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Nuclei",
+    "topic": "Nuclear fusion",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Nuclei",
+    "topic": "Half-life",
+    "priority": "HIGH",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Semiconductor Electronics",
+    "topic": "P-N junction",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Semiconductor Electronics",
+    "topic": "Diode",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Semiconductor Electronics",
+    "topic": "Transistor",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Semiconductor Electronics",
+    "topic": "Logic gates",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  },
+  {
+    "subject": "Physics",
+    "chapter": "Semiconductor Electronics",
+    "topic": "Digital circuits",
+    "priority": "MUST DO",
+    "class": "Class 12"
+  }
+]
