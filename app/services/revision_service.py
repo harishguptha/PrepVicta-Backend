@@ -366,7 +366,7 @@ async def get_chapter_quiz(chapter: str, subject: str, pool: asyncpg.Pool) -> di
 
     topics_rows = await pool.fetch(
         """
-        SELECT topic FROM task_topic
+        SELECT topic FROM prepvicta_data.task_topic
         WHERE chapter = $1
           AND CASE WHEN subject IN ('Botany','Zoology') THEN 'Biology' ELSE subject END = $2
         ORDER BY weight_pct DESC NULLS LAST, pyq_qs DESC NULLS LAST
@@ -433,28 +433,41 @@ async def get_chapter_quiz(chapter: str, subject: str, pool: asyncpg.Pool) -> di
 async def get_revision_topics(user_id: str, subject: str, pool: asyncpg.Pool) -> list[dict]:
     rows = await pool.fetch(
         """
-        SELECT DISTINCT ON (tt.chapter, tt.topic)
-            tt.chapter, tt.topic AS section, tt.subject, tt.priority,
-            tt.is_done AS completed, tt.completed_at,
+        SELECT
+            tp.chapter,
+            tp.section,
+            tp.subject,
+            tp.viewed_at AS completed_at,
+            COALESCE(
+                (SELECT MAX(CASE WHEN priority LIKE '%MUST%' THEN 'MUST DO'
+                                 WHEN priority LIKE '%HIGH%' THEN 'HIGH'
+                                 ELSE 'SHOULD DO' END)
+                 FROM prepvicta_data.task_topic tt
+                 WHERE tt.chapter = tp.chapter),
+                'SHOULD DO'
+            ) AS priority,
             EXISTS(
                 SELECT 1 FROM prepvicta_data.revision_quiz rq
-                WHERE rq.chapter = tt.chapter AND rq.section = tt.topic
+                WHERE rq.chapter = tp.chapter AND rq.section = tp.section
             ) AS quiz_ready,
             EXISTS(
                 SELECT 1 FROM prepvicta_data.revision_summary rs
-                WHERE rs.chapter = tt.chapter AND rs.section = tt.topic
+                WHERE rs.chapter = tp.chapter AND rs.section = tp.section
             ) AS summary_ready,
+            EXISTS(
+                SELECT 1 FROM prepvicta_data.revision_attempt ra
+                WHERE ra.user_id = $1::uuid AND ra.chapter = tp.chapter AND ra.section = tp.section
+            ) AS completed,
             (
                 SELECT ra.score::float / ra.total * 100
                 FROM prepvicta_data.revision_attempt ra
-                WHERE ra.user_id = tt.user_id AND ra.chapter = tt.chapter AND ra.section = tt.topic
+                WHERE ra.user_id = $1::uuid AND ra.chapter = tp.chapter AND ra.section = tp.section
                 ORDER BY ra.attempted_at DESC LIMIT 1
             ) AS last_score
-        FROM prepvicta_data.student_planner_tasks tt
-        WHERE tt.user_id = $1
-          AND CASE WHEN tt.subject IN ('Botany','Zoology') THEN 'Biology' ELSE tt.subject END = $2
-        ORDER BY tt.chapter, tt.topic, tt.is_done ASC,
-                 CASE WHEN tt.priority LIKE '%MUST%' THEN 1 WHEN tt.priority LIKE '%HIGH%' THEN 2 ELSE 3 END
+        FROM prepvicta_data.topic_progress tp
+        WHERE tp.user_id = $1::uuid
+          AND CASE WHEN tp.subject IN ('Botany','Zoology') THEN 'Biology' ELSE tp.subject END = $2
+        ORDER BY tp.chapter, tp.section
         """,
         user_id, subject,
     )

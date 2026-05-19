@@ -205,7 +205,7 @@ async def get_chapters(subject: str, pool: asyncpg.Pool) -> list[dict]:
             chapter,
             COUNT(*) AS topic_count,
             MAX(CASE WHEN priority LIKE '%MUST%' THEN 3 WHEN priority LIKE '%HIGH%' THEN 2 ELSE 1 END) AS priority_rank
-        FROM task_topic
+        FROM prepvicta_data.task_topic
         WHERE CASE WHEN subject IN ('Botany','Zoology') THEN 'Biology' ELSE subject END = $1
         GROUP BY subject, chapter
         ORDER BY priority_rank DESC, chapter

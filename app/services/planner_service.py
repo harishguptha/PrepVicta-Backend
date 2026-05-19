@@ -76,7 +76,7 @@ async def _fetch_topics_from_db(pool: asyncpg.Pool) -> list[dict[str, Any]]:
             CAST(REPLACE(class, 'Class ', '') AS INTEGER) AS class_level,
             COALESCE(pyq_qs, 2) AS pyq_qs,
             COALESCE(weight_pct, 4) AS weight_pct
-        FROM task_topic
+        FROM prepvicta_data.task_topic
         ORDER BY subject, chapter, topic
     """)
     return [dict(r) for r in rows]
