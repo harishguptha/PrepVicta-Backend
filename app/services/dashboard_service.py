@@ -80,65 +80,64 @@ async def _get_ai_insight(
     streak: int,
     pool: asyncpg.Pool,
 ) -> str:
-    # Cache valid only if generated within 6 hours and under 100 chars (filters out old long responses)
     row = await pool.fetchrow(
         """
         SELECT insight FROM prepvicta_data.dashboard_ai_insight
         WHERE user_id = $1::uuid
           AND created_at >= NOW() - INTERVAL '6 hours'
-          AND LENGTH(insight) < 100
         """,
         user_id,
     )
     if row:
         return row["insight"]
 
-    settings = get_settings()
-    client = AsyncOpenAI(api_key=settings.openai_api_key, timeout=settings.openai_timeout_seconds)
+    try:
+        settings = get_settings()
+        client = AsyncOpenAI(api_key=settings.openai_api_key, timeout=settings.openai_timeout_seconds)
 
-    # Build rich context
-    lines = []
-    if subject_progress:
-        for s in subject_progress:
-            lines.append(f"{s['subject']}: {s['completed']}/{s['total']} topics done ({s['percentage']}%)")
-    if at_risk:
-        risk_names = ", ".join(r["subject"] for r in at_risk)
-        lines.append(f"At-risk subjects: {risk_names}")
-    if streak > 0:
-        lines.append(f"Study streak: {streak} day(s)")
-    context = "; ".join(lines) if lines else "Student just started — no progress recorded yet"
+        lines = []
+        if subject_progress:
+            for s in subject_progress:
+                lines.append(f"{s['subject']}: {s['completed']}/{s['total']} topics done ({s['percentage']}%)")
+        if at_risk:
+            risk_names = ", ".join(r["subject"] for r in at_risk)
+            lines.append(f"At-risk subjects: {risk_names}")
+        if streak > 0:
+            lines.append(f"Study streak: {streak} day(s)")
+        context = "; ".join(lines) if lines else "Student just started — no progress recorded yet"
 
-    response = await client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are a NEET exam coach. Write ONE specific, punchy sentence under 15 words. "
-                    "Reference the actual subject or number from the data. No generic advice."
-                ),
-            },
-            {
-                "role": "user",
-                "content": f"Data: {context}. Write one actionable tip.",
-            },
-        ],
-        temperature=0.8,
-        max_tokens=40,
-    )
-    raw = (response.choices[0].message.content or "").strip().strip('"').strip("'")
-    # Keep only the first sentence
-    insight = raw.split('.')[0].strip() + '.' if '.' in raw else raw
+        response = await client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a NEET exam coach. Write ONE specific, punchy sentence under 15 words. "
+                        "Reference the actual subject or number from the data. No generic advice."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": f"Data: {context}. Write one actionable tip.",
+                },
+            ],
+            temperature=0.8,
+            max_tokens=40,
+        )
+        raw = (response.choices[0].message.content or "").strip().strip('"').strip("'")
+        insight = raw.split('.')[0].strip() + '.' if '.' in raw else raw
 
-    await pool.execute(
-        """
-        INSERT INTO prepvicta_data.dashboard_ai_insight (user_id, insight)
-        VALUES ($1::uuid, $2)
-        ON CONFLICT (user_id) DO UPDATE SET insight = EXCLUDED.insight, created_at = NOW()
-        """,
-        user_id, insight,
-    )
-    return insight
+        await pool.execute(
+            """
+            INSERT INTO prepvicta_data.dashboard_ai_insight (user_id, insight)
+            VALUES ($1::uuid, $2)
+            ON CONFLICT (user_id) DO UPDATE SET insight = EXCLUDED.insight, created_at = NOW()
+            """,
+            user_id, insight,
+        )
+        return insight
+    except Exception:
+        return "Keep going — every topic studied brings you closer to your NEET goal."
 
 
 async def _get_accomplishments(user_id: str, streak: int, pool: asyncpg.Pool) -> list[dict]:
@@ -270,10 +269,10 @@ async def _get_readiness_score(user_id: str, pool: asyncpg.Pool) -> dict:
         )
         SELECT
             COUNT(*)                             AS total_users,
-            COUNT(*) FILTER (WHERE score_pct < $2) AS users_below
+            COUNT(*) FILTER (WHERE score_pct < $1) AS users_below
         FROM user_scores
         """,
-        user_id, pct,
+        pct,
     )
     total_users = int(pct_row["total_users"] or 1)
     users_below = int(pct_row["users_below"] or 0)

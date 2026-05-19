@@ -11,6 +11,8 @@ class LoginResponse(BaseModel):
     email: str
     name: str | None
     role: str
+    is_new_user: bool = False
+    onboarding_completed: bool = False
 
 
 class CreateUserRequest(BaseModel):

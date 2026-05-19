@@ -33,7 +33,18 @@ async def login_user(payload: LoginRequest, pool: asyncpg.Pool) -> LoginResponse
     )
     if row is None or not row["password_hash"] or not _verify(payload.password, row["password_hash"]):
         raise ValueError("INVALID_CREDENTIALS")
-    return LoginResponse(id=str(row["id"]), email=row["email"], name=row["name"], role=row["role"])
+    onboarding_completed = await pool.fetchval(
+        "SELECT EXISTS(SELECT 1 FROM student_profiles WHERE user_id = $1)",
+        row["id"],
+    )
+    return LoginResponse(
+        id=str(row["id"]),
+        email=row["email"],
+        name=row["name"],
+        role=row["role"],
+        is_new_user=False,
+        onboarding_completed=bool(onboarding_completed),
+    )
 
 
 async def create_user(payload: CreateUserRequest, pool: asyncpg.Pool) -> CreateUserResponse:
@@ -73,11 +84,29 @@ async def google_auth_user(credential: str, pool: asyncpg.Pool) -> LoginResponse
 
     row = await pool.fetchrow("SELECT id, email, name, role FROM users WHERE email = $1", email)
     if row:
-        return LoginResponse(id=str(row["id"]), email=row["email"], name=row["name"], role=row["role"])
+        onboarding_completed = await pool.fetchval(
+            "SELECT EXISTS(SELECT 1 FROM student_profiles WHERE user_id = $1)",
+            row["id"],
+        )
+        return LoginResponse(
+            id=str(row["id"]),
+            email=row["email"],
+            name=row["name"],
+            role=row["role"],
+            is_new_user=False,
+            onboarding_completed=bool(onboarding_completed),
+        )
 
     row = await pool.fetchrow(
         "INSERT INTO users (email, name) VALUES ($1, $2) RETURNING id, email, name, role",
         email,
         name,
     )
-    return LoginResponse(id=str(row["id"]), email=row["email"], name=row["name"], role=row["role"])
+    return LoginResponse(
+        id=str(row["id"]),
+        email=row["email"],
+        name=row["name"],
+        role=row["role"],
+        is_new_user=True,
+        onboarding_completed=False,
+    )

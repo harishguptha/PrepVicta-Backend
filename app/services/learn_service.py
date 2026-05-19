@@ -140,7 +140,9 @@ async def mark_topic_viewed(
         """
         INSERT INTO prepvicta_data.topic_progress (user_id, chapter, section, subject)
         VALUES ($1::uuid, $2, $3, $4)
-        ON CONFLICT (user_id, chapter, section) DO NOTHING
+        ON CONFLICT (user_id, chapter, section) DO UPDATE SET
+            subject = EXCLUDED.subject,
+            viewed_at = NOW()
         """,
         user_id, chapter, section, subject,
     )
@@ -301,7 +303,7 @@ async def get_chapter_sections(chapter: str, subject: str) -> list[dict]:
         index.search_records,
         namespace=NAMESPACE,
         query=SearchQuery(inputs={"text": chapter}, top_k=60, filter={"chapter": chapter_filter, "subject": subj_filter}),
-        fields=["section", "chapter", "class"],
+        fields=["section", "chapter", "class", "subject"],
     )
     unique: list[dict] = []
     seen: set[str] = set()
@@ -313,6 +315,7 @@ async def get_chapter_sections(chapter: str, subject: str) -> list[dict]:
                 "section": sec,
                 "chapter": hit.fields.get("chapter", chapter),
                 "class":   hit.fields.get("class", ""),
+                "subject": hit.fields.get("subject", subject),
             })
     _chapter_sections_cache.set(cache_key, unique)
     return unique
@@ -408,7 +411,7 @@ async def get_raw_topic_by_chapter_section(chapter: str, section: str) -> dict |
         index.search_records,
         namespace=NAMESPACE,
         query=SearchQuery(inputs={"text": f"{chapter} {section}"}, top_k=1, filter={"chapter": {"$eq": chapter}, "section": {"$eq": section}}),
-        fields=["text", "chapter", "section", "class", "image_count", "img_0", "img_1", "img_2", "img_3", "img_4"],
+        fields=["text", "chapter", "section", "subject", "class", "image_count", "img_0", "img_1", "img_2", "img_3", "img_4"],
     )
     hits = results.result.hits
     if not hits:
@@ -422,6 +425,7 @@ async def get_raw_topic_by_chapter_section(chapter: str, section: str) -> dict |
         "id": hits[0].id,
         "chapter": f.get("chapter", ""),
         "section": f.get("section", ""),
+        "subject": f.get("subject", ""),
         "class": f.get("class", ""),
         "content": content,
         "images": images,
