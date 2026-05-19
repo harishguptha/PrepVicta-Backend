@@ -90,6 +90,29 @@ CREATE TABLE IF NOT EXISTS prepvicta_data.topic_infographic (
 """
 
 
+_CREATE_TOPIC_FLOWCHART = """
+CREATE TABLE IF NOT EXISTS prepvicta_data.topic_flowchart (
+    id         UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
+    chapter    TEXT         NOT NULL,
+    section    TEXT         NOT NULL,
+    subject    TEXT         NOT NULL DEFAULT 'Biology',
+    flowchart  JSONB        NOT NULL DEFAULT '{}',
+    created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    UNIQUE (chapter, section)
+);
+"""
+
+_CREATE_DASHBOARD_AI_INSIGHT = """
+CREATE TABLE IF NOT EXISTS prepvicta_data.dashboard_ai_insight (
+    id         UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id    UUID         NOT NULL,
+    insight    TEXT         NOT NULL,
+    created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    UNIQUE (user_id)
+);
+"""
+
+
 async def init_db(pool: asyncpg.Pool) -> None:
     async with pool.acquire() as conn:
         await conn.execute(_CREATE_REVISION_SUMMARY)
@@ -98,4 +121,6 @@ async def init_db(pool: asyncpg.Pool) -> None:
         await conn.execute(_CREATE_TOPIC_PROGRESS)
         await conn.execute(_CREATE_TOPIC_MINDMAP)
         await conn.execute(_CREATE_TOPIC_INFOGRAPHIC)
+        await conn.execute(_CREATE_TOPIC_FLOWCHART)
+        await conn.execute(_CREATE_DASHBOARD_AI_INSIGHT)
         await conn.execute(_CREATE_PERFORMANCE_INDEXES)

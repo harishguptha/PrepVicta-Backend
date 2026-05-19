@@ -303,6 +303,62 @@ Rules:
 """
 
 
+_FLOWCHART_JSON_SYSTEM = (
+    "You are a NEET exam expert. Create structured flowchart data for visual learning. "
+    "Return ONLY valid JSON, no extra text, no markdown code fences."
+)
+
+_FLOWCHART_JSON_USER = """Create a visual flowchart for NEET topic '{section}' from chapter '{chapter}'.
+
+Topic content:
+{content}
+
+Return a JSON object with exactly this structure:
+{{
+  "title": "{section}",
+  "steps": [
+    {{"type": "start", "text": "Starting point name"}},
+    {{"type": "process", "text": "Process description", "note": "Optional NEET fact", "star": false}},
+    {{"type": "decision", "text": "Decision question?", "branches": [
+      {{"badge": "YES", "text": "Outcome if yes", "note": ""}},
+      {{"badge": "NO", "text": "Outcome if no", "note": ""}}
+    ]}},
+    {{"type": "end", "text": "Final outcome"}}
+  ]
+}}
+
+Rules:
+- start: exactly one step at the beginning
+- process: main steps; set "star": true for NEET-critical steps; "note": short fact or value (empty string if none)
+- decision: use for branching points; branches array must have exactly 2 items with badge ("YES"/"NO" or named labels) and text
+- end: one or more final outcomes
+- Include 6-12 total steps covering the complete process end-to-end
+- Each text field: max 60 characters, concise and factual
+- Return ONLY the JSON object, nothing else
+"""
+
+
+async def generate_flowchart_json(chapter: str, section: str, content: str) -> dict:
+    client = _get_client()
+    response = await client.chat.completions.create(
+        model=MODEL,
+        messages=[
+            {"role": "system", "content": _FLOWCHART_JSON_SYSTEM},
+            {"role": "user", "content": _FLOWCHART_JSON_USER.format(
+                section=section, chapter=chapter, content=content[:5000]
+            )},
+        ],
+        temperature=0.3,
+        max_tokens=1200,
+        response_format={"type": "json_object"},
+    )
+    raw = (response.choices[0].message.content or "").strip()
+    try:
+        return json.loads(raw)
+    except Exception:
+        raise ValueError("Failed to parse flowchart JSON from AI response")
+
+
 async def generate_infographic_json(chapter: str, section: str, content: str) -> dict:
     client = _get_client()
     response = await client.chat.completions.create(

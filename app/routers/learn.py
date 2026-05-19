@@ -16,6 +16,8 @@ from app.services.learn_service import (
     generate_and_store_mind_map,
     get_infographic_cached,
     generate_and_store_infographic,
+    get_flowchart_cached,
+    generate_and_store_flowchart,
 )
 
 router = APIRouter(prefix="/learn", tags=["Learn Center"])
@@ -149,6 +151,24 @@ async def infographic(
         topic = await get_topic_by_chapter_section(chapter, section, pool)
         content = topic["content"] if topic else f"{chapter} — {section}"
         return await generate_and_store_infographic(chapter, section, subject, content, pool)
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+
+
+@router.get("/flowchart")
+async def flowchart(
+    chapter: str = Query(...),
+    section: str = Query(...),
+    subject: str = Query(default="Biology"),
+):
+    try:
+        pool = await get_pool()
+        existing = await get_flowchart_cached(chapter, section, pool)
+        if existing:
+            return existing
+        topic = await get_topic_by_chapter_section(chapter, section, pool)
+        content = topic["content"] if topic else f"{chapter} — {section}"
+        return await generate_and_store_flowchart(chapter, section, subject, content, pool)
     except Exception as exc:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
 

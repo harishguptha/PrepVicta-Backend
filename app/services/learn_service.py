@@ -370,6 +370,32 @@ async def generate_and_store_mind_map(
     return data
 
 
+async def get_flowchart_cached(chapter: str, section: str, pool: asyncpg.Pool) -> dict | None:
+    row = await pool.fetchrow(
+        "SELECT flowchart FROM prepvicta_data.topic_flowchart WHERE chapter = $1 AND section = $2",
+        chapter, section,
+    )
+    if row:
+        return row["flowchart"] if isinstance(row["flowchart"], dict) else json.loads(row["flowchart"])
+    return None
+
+
+async def generate_and_store_flowchart(
+    chapter: str, section: str, subject: str, content: str, pool: asyncpg.Pool
+) -> dict:
+    from app.services.generate_service import generate_flowchart_json
+    data = await generate_flowchart_json(chapter, section, content)
+    await pool.execute(
+        """
+        INSERT INTO prepvicta_data.topic_flowchart (chapter, section, subject, flowchart)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (chapter, section) DO UPDATE SET flowchart = EXCLUDED.flowchart
+        """,
+        chapter, section, subject, json.dumps(data),
+    )
+    return data
+
+
 async def get_raw_topic_by_chapter_section(chapter: str, section: str) -> dict | None:
     """Fetch a specific section from Pinecone without generating LLM context."""
     cache_key = (chapter.strip(), section.strip())

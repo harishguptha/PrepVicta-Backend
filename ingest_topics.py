@@ -10,6 +10,7 @@ Run:
 """
 
 import re
+import time
 import zipfile
 from dotenv import load_dotenv
 import os
@@ -27,10 +28,27 @@ SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "")
 INDEX_NAME = os.getenv("PINECONE_INDEX", "")
 NAMESPACE  = os.getenv("PINECONE_NAMESPACE", "")
 BUCKET     = os.getenv("SUPABASE_STORAGE_BUCKET", "topic-images")
-BATCH_SIZE   = 30
+BATCH_SIZE   = 10   # smaller batches to stay under token-per-minute limit
 
-ZIP_CLASS12 = r"C:\Users\SanthoshKumarP\Downloads\output (10).zip"
-ZIP_CLASS11 = r"C:\Users\SanthoshKumarP\Downloads\output (11).zip"
+# Set to True to skip re-uploading images (use when images are already in Supabase)
+SKIP_IMAGE_UPLOAD = False
+
+# Resume from this record index (0 = start fresh, 570 = skip first 570 already upserted)
+START_FROM_RECORD = 1750
+# Seconds to sleep between batches — keeps us under the 250k tokens/min limit
+BATCH_SLEEP_SECONDS = 4
+
+# Biology zips
+BIOLOGY_ZIP_CLASS12 = r"C:\Users\SanthoshKumarP\Downloads\output (10).zip"
+BIOLOGY_ZIP_CLASS11 = r"C:\Users\SanthoshKumarP\Downloads\output (11).zip"
+
+# Physics zips — update paths when you have the files
+PHYSICS_ZIP_CLASS12 = r"C:\Users\SanthoshKumarP\Downloads\output (12).zip"
+PHYSICS_ZIP_CLASS11 = r"C:\Users\SanthoshKumarP\Downloads\output (13).zip"
+
+# Chemistry zips — update paths when you have the files
+CHEMISTRY_ZIP_CLASS12 = r"C:\Users\SanthoshKumarP\Downloads\output (14).zip"
+CHEMISTRY_ZIP_CLASS11 = r"C:\Users\SanthoshKumarP\Downloads\output (15).zip"
 
 
 # ── Supabase Storage ──────────────────────────────────────────────────────────
@@ -57,6 +75,12 @@ _upload_fail = 0
 def upload_image(sb: Client, img_bytes: bytes, storage_path: str) -> str:
     """Upload image bytes to Supabase Storage. Returns the public URL."""
     global _upload_ok, _upload_fail
+    public_url = f"{SUPABASE_URL}/storage/v1/object/public/{BUCKET}/{storage_path}"
+
+    if SKIP_IMAGE_UPLOAD:
+        print(f"    [IMG SKIP] {storage_path} (upload disabled)")
+        return public_url
+
     try:
         sb.storage.from_(BUCKET).upload(
             path=storage_path,
@@ -73,7 +97,7 @@ def upload_image(sb: Client, img_bytes: bytes, storage_path: str) -> str:
             _upload_fail += 1
             print(f"    [IMG FAIL] {storage_path} — {e}")
 
-    return f"{SUPABASE_URL}/storage/v1/object/public/{BUCKET}/{storage_path}"
+    return public_url
 
 
 # ── MD processing ─────────────────────────────────────────────────────────────
@@ -123,7 +147,7 @@ def make_record_id(class_label: str, folder: str, section_index: int) -> str:
 
 # ── per-zip processing ────────────────────────────────────────────────────────
 
-def process_zip(zip_path: str, class_label: str, sb: Client) -> list[dict]:
+def process_zip(zip_path: str, class_label: str, sb: Client, subject: str = "Biology") -> list[dict]:
     """
     For each chapter in the zip:
       - Upload images to Supabase Storage
@@ -178,16 +202,24 @@ def process_zip(zip_path: str, class_label: str, sb: Client) -> list[dict]:
             updated_md = re.sub(r"!\[\]\((images/[^)]+)\)", replace_img, raw_md)
 
             # 3. Split into sections and build Pinecone records
+            # Pinecone metadata limit is 40,960 bytes per vector total.
+            # Reserve ~4 KB for other fields; cap text at 36 KB.
+            MAX_TEXT_BYTES = 36_000
             sections = split_md_into_sections(updated_md)
             for idx, sec in enumerate(sections):
                 # Extract image URLs that appear in this section
                 section_images = re.findall(
                     r"!\[\]\((https://[^)]+)\)", sec["content"]
                 )
+                text = f"{chapter}\n{sec['heading']}\n\n{sec['content']}"
+                encoded = text.encode("utf-8")
+                if len(encoded) > MAX_TEXT_BYTES:
+                    text = encoded[:MAX_TEXT_BYTES].decode("utf-8", errors="ignore")
+                    print(f"    [TRUNCATE] {chapter} / {sec['heading']} — trimmed to {MAX_TEXT_BYTES} bytes")
                 record = {
                     "_id":          make_record_id(class_label, folder, idx),
-                    "text":         f"{chapter}\n{sec['heading']}\n\n{sec['content']}",
-                    "subject":      "Biology",
+                    "text":         text,
+                    "subject":      subject,
                     "chapter":      chapter,
                     "section":      sec["heading"],
                     "class":        class_label,
@@ -204,11 +236,28 @@ def process_zip(zip_path: str, class_label: str, sb: Client) -> list[dict]:
 
 def upsert_in_batches(index, namespace: str, records: list[dict]):
     total = len(records)
-    for start in range(0, total, BATCH_SIZE):
+    effective_start = START_FROM_RECORD
+    if effective_start > 0:
+        print(f"  Resuming from record {effective_start} (skipping first {effective_start} already upserted)")
+
+    for start in range(effective_start, total, BATCH_SIZE):
         batch = records[start: start + BATCH_SIZE]
-        index.upsert_records(namespace=namespace, records=batch)
         end = min(start + BATCH_SIZE, total)
-        print(f"  Upserted {end}/{total} records into Pinecone")
+        retries = 0
+        while True:
+            try:
+                index.upsert_records(namespace=namespace, records=batch)
+                print(f"  Upserted {end}/{total} records into Pinecone")
+                time.sleep(BATCH_SLEEP_SECONDS)
+                break
+            except Exception as e:
+                if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                    wait = 60 * (2 ** retries)
+                    print(f"  Rate limited. Waiting {wait}s before retry (attempt {retries + 1})...")
+                    time.sleep(wait)
+                    retries += 1
+                else:
+                    raise
 
 
 # ── main ──────────────────────────────────────────────────────────────────────
@@ -229,15 +278,23 @@ def main():
     print("=== Setting up Supabase Storage bucket ===")
     ensure_bucket(sb)
 
-    print("\n=== Processing Class 12 zip (uploading images + building records) ===")
-    records_12 = process_zip(ZIP_CLASS12, "Class 12", sb)
-    print(f"  → {len(records_12)} sections")
+    all_records = []
 
-    print("\n=== Processing Class 11 zip (uploading images + building records) ===")
-    records_11 = process_zip(ZIP_CLASS11, "Class 11", sb)
-    print(f"  → {len(records_11)} sections")
-
-    all_records = records_12 + records_11
+    for zip_path, class_label, subject in [
+        (BIOLOGY_ZIP_CLASS12,   "Class 12", "Biology"),
+        (BIOLOGY_ZIP_CLASS11,   "Class 11", "Biology"),
+        (PHYSICS_ZIP_CLASS12,   "Class 12", "Physics"),
+        (PHYSICS_ZIP_CLASS11,   "Class 11", "Physics"),
+        (CHEMISTRY_ZIP_CLASS12, "Class 12", "Chemistry"),
+        (CHEMISTRY_ZIP_CLASS11, "Class 11", "Chemistry"),
+    ]:
+        if not zip_path:
+            print(f"\n=== Skipping {subject} {class_label} (no zip path set) ===")
+            continue
+        print(f"\n=== Processing {subject} {class_label} zip ===")
+        recs = process_zip(zip_path, class_label, sb, subject)
+        print(f"  → {len(recs)} sections")
+        all_records.extend(recs)
     print(f"\n=== Upserting {len(all_records)} records into Pinecone ===")
     upsert_in_batches(index, NAMESPACE, all_records)
 
