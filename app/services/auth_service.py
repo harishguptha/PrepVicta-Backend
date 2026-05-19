@@ -1,13 +1,16 @@
 import base64
 import hashlib
-import os
+import logging
 
 import asyncpg
 import bcrypt
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
+from app.config import get_settings
 from app.schemas.auth import CreateUserRequest, CreateUserResponse, LoginRequest, LoginResponse
+
+logger = logging.getLogger(__name__)
 
 
 def _prepare(password: str) -> bytes:
@@ -24,27 +27,31 @@ def _verify(password: str, hashed: str) -> bool:
 
 
 async def login_user(payload: LoginRequest, pool: asyncpg.Pool) -> LoginResponse:
-    row = await pool.fetchrow("SELECT id, email, name, role, password_hash FROM users WHERE email = $1", payload.email)
+    row = await pool.fetchrow(
+        "SELECT id, email, name, role, password_hash FROM users WHERE email = $1",
+        payload.email.lower(),
+    )
     if row is None or not row["password_hash"] or not _verify(payload.password, row["password_hash"]):
         raise ValueError("INVALID_CREDENTIALS")
     return LoginResponse(id=str(row["id"]), email=row["email"], name=row["name"], role=row["role"])
 
 
 async def create_user(payload: CreateUserRequest, pool: asyncpg.Pool) -> CreateUserResponse:
-    existing = await pool.fetchval("SELECT id FROM users WHERE email = $1", payload.email)
+    email = payload.email.lower()
+    existing = await pool.fetchval("SELECT id FROM users WHERE email = $1", email)
     if existing is not None:
         raise ValueError("EMAIL_ALREADY_EXISTS")
     row = await pool.fetchrow(
         "INSERT INTO users (email, password_hash, name) VALUES ($1, $2, $3) RETURNING id, email, name, role",
-        payload.email,
+        email,
         _hash(payload.password),
-        payload.full_name,
+        payload.full_name.strip(),
     )
     return CreateUserResponse(id=str(row["id"]), email=row["email"], name=row["name"], role=row["role"])
 
 
 async def google_auth_user(credential: str, pool: asyncpg.Pool) -> LoginResponse:
-    client_id = os.getenv("GOOGLE_CLIENT_ID", "")
+    client_id = get_settings().google_client_id
     if not client_id or client_id == "YOUR_GOOGLE_CLIENT_ID_HERE":
         raise ValueError("GOOGLE_NOT_CONFIGURED")
 
@@ -55,9 +62,10 @@ async def google_auth_user(credential: str, pool: asyncpg.Pool) -> LoginResponse
             client_id,
         )
     except Exception:
+        logger.warning("invalid_google_token")
         raise ValueError("INVALID_GOOGLE_TOKEN")
 
-    email = id_info.get("email", "")
+    email = id_info.get("email", "").lower()
     name = id_info.get("name") or id_info.get("given_name", "")
 
     if not email:

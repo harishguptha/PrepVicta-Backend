@@ -1,43 +1,63 @@
+import logging
+
 from fastapi import APIRouter, HTTPException, Query, status
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
 from app.db.database import get_pool
+from app.services.generate_service import MECHANIC_LABELS, generate_mechanic
 from app.services.learn_service import (
-    get_chapters, search_topics, get_topic_by_chapter_section,
-    get_chapter_sections, mark_topic_viewed, get_user_progress,
-    get_mind_map_cached, generate_and_store_mind_map,
-    get_infographic_cached, generate_and_store_infographic,
+    get_chapters,
+    get_chapter_sections,
+    get_topic_by_chapter_section,
+    get_user_progress,
+    mark_topic_viewed,
+    search_topics,
+    get_mind_map_cached,
+    generate_and_store_mind_map,
+    get_infographic_cached,
+    generate_and_store_infographic,
 )
-from app.services.generate_service import generate_mechanic, MECHANIC_LABELS
 
 router = APIRouter(prefix="/learn", tags=["Learn Center"])
+logger = logging.getLogger(__name__)
+INTERNAL_ERROR = "Internal server error"
 
 
 class GenerateRequest(BaseModel):
-    chapter: str
-    section: str
-    content: str
-    mechanic: str
+    chapter: str = Field(..., min_length=1, max_length=200)
+    section: str = Field(..., min_length=1, max_length=300)
+    content: str = Field(..., min_length=1, max_length=20000)
+    mechanic: str = Field(..., min_length=1, max_length=50)
 
 
 @router.get("/chapters")
-async def chapters(subject: str = Query(default="Biology")):
+async def chapters(subject: str = Query(default="Biology", max_length=50)):
     try:
         pool = await get_pool()
         return await get_chapters(subject, pool)
     except Exception as exc:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+        logger.exception("failed_to_fetch_chapters")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=INTERNAL_ERROR) from exc
 
 
 @router.get("/search")
-async def search(q: str = Query(..., min_length=2), subject: str = Query(default="Biology"), limit: int = Query(default=5, le=10)):
+async def search(
+    q: str = Query(..., min_length=2, max_length=200),
+    subject: str = Query(default="Biology", max_length=50),
+    limit: int = Query(default=5, ge=1, le=10),
+):
     try:
         return await search_topics(q, subject, limit)
     except Exception as exc:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+        logger.exception("failed_to_search_topics")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=INTERNAL_ERROR) from exc
 
 
 @router.get("/topic")
-async def topic(chapter: str = Query(...), section: str = Query(...)):
+async def topic(
+    chapter: str = Query(..., max_length=200),
+    section: str = Query(..., max_length=300),
+):
     try:
         pool = await get_pool()
         result = await get_topic_by_chapter_section(chapter, section, pool)
@@ -47,44 +67,54 @@ async def topic(chapter: str = Query(...), section: str = Query(...)):
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+        logger.exception("failed_to_fetch_topic")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=INTERNAL_ERROR) from exc
 
 
 @router.get("/sections")
-async def sections(chapter: str = Query(...), subject: str = Query(default="Biology")):
+async def sections(
+    chapter: str = Query(..., max_length=200),
+    subject: str = Query(default="Biology", max_length=50),
+):
     try:
         return await get_chapter_sections(chapter, subject)
     except Exception as exc:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+        logger.exception("failed_to_fetch_sections")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=INTERNAL_ERROR) from exc
 
 
 @router.get("/progress")
-async def get_progress(user_id: str = Query(...), subject: str = Query(default="Biology")):
+async def get_progress(
+    user_id: str = Query(..., max_length=80),
+    subject: str = Query(default="Biology", max_length=50),
+):
     try:
         pool = await get_pool()
         return await get_user_progress(user_id, subject, pool)
     except Exception as exc:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+        logger.exception("failed_to_fetch_progress")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=INTERNAL_ERROR) from exc
 
 
 @router.post("/progress")
 async def mark_progress(
-    user_id: str = Query(...),
-    chapter: str = Query(...),
-    section: str = Query(...),
-    subject: str = Query(default="Biology"),
+    user_id: str = Query(..., max_length=80),
+    chapter: str = Query(..., max_length=200),
+    section: str = Query(..., max_length=300),
+    subject: str = Query(default="Biology", max_length=50),
 ):
     try:
         pool = await get_pool()
         await mark_topic_viewed(user_id, chapter, section, subject, pool)
         return {"ok": True}
     except Exception as exc:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+        logger.exception("failed_to_mark_progress")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=INTERNAL_ERROR) from exc
 
 
 @router.get("/mechanics")
 async def mechanics():
-    return [{"key": k, "label": v} for k, v in MECHANIC_LABELS.items()]
+    return [{"key": key, "label": label} for key, label in MECHANIC_LABELS.items()]
 
 
 @router.get("/mindmap")
@@ -135,4 +165,5 @@ async def generate(payload: GenerateRequest):
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+        logger.exception("failed_to_generate_mechanic")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=INTERNAL_ERROR) from exc

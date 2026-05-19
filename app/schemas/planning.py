@@ -13,8 +13,8 @@ StudyTime = Literal["Morning", "Afternoon", "Evening", "Night"]
 
 
 class PlanningAgentRequest(BaseModel):
-    user_id: str = Field(..., description="UUID of the authenticated user")
-    full_name: str = Field(..., min_length=1, examples=["Harish Gupta"])
+    user_id: str = Field(..., min_length=1, max_length=80, description="UUID of the authenticated user")
+    full_name: str = Field(..., min_length=1, max_length=120, examples=["Harish Gupta"])
     current_class_stage: ClassStage
     neet_attempt_year: AttemptYear
     daily_study_hours: DailyStudyHours
@@ -26,11 +26,11 @@ class PlanningAgentRequest(BaseModel):
 
 class StudyTask(BaseModel):
     subject: Subject
-    chapter: str
-    topic: str
-    priority: str
+    chapter: str = Field(..., max_length=200)
+    topic: str = Field(..., max_length=300)
+    priority: str = Field(..., max_length=50)
     estimated_minutes: int
-    activity: str
+    activity: str = Field(..., max_length=500)
 
 
 class DailyGeneratedTasks(BaseModel):

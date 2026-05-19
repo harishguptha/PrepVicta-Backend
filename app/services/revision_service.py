@@ -1,20 +1,38 @@
-import os, json, random
+import asyncio
+import json
+import random
+
 from openai import AsyncOpenAI
-from dotenv import load_dotenv
 import asyncpg
+
+from app.cache import TTLCache
+from app.config import get_settings
 from app.services.learn_service import get_chapter_images
 
-load_dotenv()
+_client: AsyncOpenAI | None = None
+_semaphore: asyncio.Semaphore | None = None
+_settings = get_settings()
+_summary_cache: TTLCache[dict] = TTLCache(_settings.cache_max_items, _settings.cache_ttl_seconds)
+_quiz_cache: TTLCache[dict] = TTLCache(_settings.cache_max_items, _settings.cache_ttl_seconds)
+_chapter_quiz_cache: TTLCache[dict] = TTLCache(_settings.cache_max_items, _settings.cache_ttl_seconds)
 
-_client = None
 
 def _get_client() -> AsyncOpenAI:
     global _client
     if _client is None:
-        _client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY", ""))
+        settings = get_settings()
+        _client = AsyncOpenAI(api_key=settings.openai_api_key, timeout=settings.openai_timeout_seconds)
     return _client
 
-MODEL = os.getenv("OPENAI_PLANNING_MODEL", "gpt-4o-mini")
+
+def _get_semaphore() -> asyncio.Semaphore:
+    global _semaphore
+    if _semaphore is None:
+        _semaphore = asyncio.Semaphore(get_settings().openai_max_concurrency)
+    return _semaphore
+
+
+MODEL = get_settings().openai_model
 
 
 # ── Revision summary ───────────────────────────────────────────────────────────
@@ -95,13 +113,20 @@ def _quiz_count(priority: str) -> tuple[int, int]:
 # ── DB helpers ─────────────────────────────────────────────────────────────────
 
 async def get_revision_summary(chapter: str, section: str, pool: asyncpg.Pool) -> dict | None:
+    cache_key = (chapter.strip(), section.strip())
+    cached = _summary_cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     row = await pool.fetchrow(
         "SELECT summary FROM prepvicta_data.revision_summary WHERE chapter = $1 AND section = $2",
         chapter, section,
     )
     if row:
         data = row["summary"] if isinstance(row["summary"], dict) else json.loads(row["summary"])
-        return {"chapter": chapter, "section": section, **data}
+        result = {"chapter": chapter, "section": section, **data}
+        _summary_cache.set(cache_key, result)
+        return result
     return None
 
 
@@ -109,18 +134,19 @@ async def generate_and_store_summary(
     chapter: str, section: str, subject: str, content: str, pool: asyncpg.Pool
 ) -> dict:
     client = _get_client()
-    response = await client.chat.completions.create(
-        model=MODEL,
-        messages=[
-            {"role": "system", "content": SUMMARY_SYSTEM},
-            {"role": "user", "content": SUMMARY_USER.format(
-                section=section, chapter=chapter, content=content[:5000]
-            )},
-        ],
-        temperature=0.4,
-        max_tokens=1500,
-        response_format={"type": "json_object"},
-    )
+    async with _get_semaphore():
+        response = await client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {"role": "system", "content": SUMMARY_SYSTEM},
+                {"role": "user", "content": SUMMARY_USER.format(
+                    section=section, chapter=chapter, content=content[:5000]
+                )},
+            ],
+            temperature=0.4,
+            max_tokens=1500,
+            response_format={"type": "json_object"},
+        )
     raw = (response.choices[0].message.content or "").strip()
     try:
         summary = json.loads(raw)
@@ -135,16 +161,27 @@ async def generate_and_store_summary(
         """,
         chapter, section, subject, json.dumps(summary),
     )
-    return {"chapter": chapter, "section": section, **summary}
+    result = {"chapter": chapter, "section": section, **summary}
+    _summary_cache.set((chapter.strip(), section.strip()), result)
+    return result
 
 
 async def get_quiz(chapter: str, section: str, pool: asyncpg.Pool) -> dict | None:
+    cache_key = (chapter.strip(), section.strip())
+    cached = _quiz_cache.get(cache_key)
+    if cached is not None:
+        qs = cached["questions"]
+        random.shuffle(qs)
+        return {**cached, "questions": qs}
+
     row = await pool.fetchrow(
         "SELECT questions FROM prepvicta_data.revision_quiz WHERE chapter = $1 AND section = $2",
         chapter, section,
     )
     if row:
         qs = row["questions"] if isinstance(row["questions"], list) else json.loads(row["questions"])
+        result = {"chapter": chapter, "section": section, "questions": qs}
+        _quiz_cache.set(cache_key, result)
         random.shuffle(qs)
         return {"chapter": chapter, "section": section, "questions": qs}
     return None
@@ -157,19 +194,20 @@ async def generate_and_store_quiz(
     client = _get_client()
     min_q, max_q = _quiz_count(priority)
 
-    response = await client.chat.completions.create(
-        model=MODEL,
-        messages=[
-            {"role": "system", "content": QUIZ_SYSTEM},
-            {"role": "user", "content": QUIZ_USER.format(
-                section=section, chapter=chapter,
-                content=content[:5000], min_q=min_q, max_q=max_q,
-            )},
-        ],
-        temperature=0.6,
-        max_tokens=4000,
-        response_format={"type": "json_object"},
-    )
+    async with _get_semaphore():
+        response = await client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {"role": "system", "content": QUIZ_SYSTEM},
+                {"role": "user", "content": QUIZ_USER.format(
+                    section=section, chapter=chapter,
+                    content=content[:5000], min_q=min_q, max_q=max_q,
+                )},
+            ],
+            temperature=0.6,
+            max_tokens=4000,
+            response_format={"type": "json_object"},
+        )
     raw = (response.choices[0].message.content or "").strip()
     try:
         parsed = json.loads(raw)
@@ -185,6 +223,7 @@ async def generate_and_store_quiz(
         """,
         subject, chapter, section, json.dumps(questions),
     )
+    _quiz_cache.set((chapter.strip(), section.strip()), {"chapter": chapter, "section": section, "questions": questions})
     random.shuffle(questions)
     return {"chapter": chapter, "section": section, "questions": questions}
 
@@ -193,6 +232,11 @@ async def save_attempt(
     user_id: str, chapter: str, section: str,
     score: int, total: int, answers: list, pool: asyncpg.Pool,
 ) -> dict:
+    if total <= 0:
+        raise ValueError("total must be greater than zero")
+    if score > total:
+        raise ValueError("score cannot exceed total")
+
     await pool.execute(
         """
         INSERT INTO prepvicta_data.revision_attempt (user_id, chapter, section, score, total, answers)
@@ -302,12 +346,21 @@ _CHAPTER_TEST_SECTION = "__CHAPTER_TEST_v2__"
 
 
 async def get_chapter_quiz(chapter: str, subject: str, pool: asyncpg.Pool) -> dict:
+    cache_key = (chapter.strip(), subject.strip())
+    cached = _chapter_quiz_cache.get(cache_key)
+    if cached is not None:
+        qs = cached["questions"]
+        random.shuffle(qs)
+        return {**cached, "questions": qs, "total": len(qs)}
+
     row = await pool.fetchrow(
         "SELECT questions FROM prepvicta_data.revision_quiz WHERE chapter = $1 AND section = $2",
         chapter, _CHAPTER_TEST_SECTION,
     )
     if row:
         qs = row["questions"] if isinstance(row["questions"], list) else json.loads(row["questions"])
+        result = {"chapter": chapter, "questions": qs, "total": len(qs)}
+        _chapter_quiz_cache.set(cache_key, result)
         random.shuffle(qs)
         return {"chapter": chapter, "questions": qs, "total": len(qs)}
 
@@ -346,16 +399,17 @@ async def get_chapter_quiz(chapter: str, subject: str, pool: asyncpg.Pool) -> di
         )
         model_to_use = MODEL
 
-    response = await client.chat.completions.create(
-        model=model_to_use,
-        messages=[
-            {"role": "system", "content": _CHAPTER_QUIZ_SYSTEM},
-            {"role": "user", "content": user_content},
-        ],
-        temperature=0.6,
-        max_tokens=7000,
-        response_format={"type": "json_object"},
-    )
+    async with _get_semaphore():
+        response = await client.chat.completions.create(
+            model=model_to_use,
+            messages=[
+                {"role": "system", "content": _CHAPTER_QUIZ_SYSTEM},
+                {"role": "user", "content": user_content},
+            ],
+            temperature=0.6,
+            max_tokens=7000,
+            response_format={"type": "json_object"},
+        )
     raw = (response.choices[0].message.content or "").strip()
     try:
         parsed = json.loads(raw)
@@ -371,6 +425,7 @@ async def get_chapter_quiz(chapter: str, subject: str, pool: asyncpg.Pool) -> di
         """,
         subject, chapter, _CHAPTER_TEST_SECTION, json.dumps(questions),
     )
+    _chapter_quiz_cache.set((chapter.strip(), subject.strip()), {"chapter": chapter, "questions": questions, "total": len(questions)})
     random.shuffle(questions)
     return {"chapter": chapter, "questions": questions, "total": len(questions)}
 

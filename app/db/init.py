@@ -49,6 +49,20 @@ CREATE TABLE IF NOT EXISTS prepvicta_data.revision_attempt (
 );
 """
 
+_CREATE_PERFORMANCE_INDEXES = """
+CREATE INDEX IF NOT EXISTS idx_topic_progress_user_subject
+    ON prepvicta_data.topic_progress (user_id, subject);
+
+CREATE INDEX IF NOT EXISTS idx_revision_attempt_user_chapter_section_attempted
+    ON prepvicta_data.revision_attempt (user_id, chapter, section, attempted_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_revision_quiz_chapter_section
+    ON prepvicta_data.revision_quiz (chapter, section);
+
+CREATE INDEX IF NOT EXISTS idx_revision_summary_chapter_section
+    ON prepvicta_data.revision_summary (chapter, section);
+"""
+
 
 _CREATE_TOPIC_MINDMAP = """
 CREATE TABLE IF NOT EXISTS prepvicta_data.topic_mindmap (
@@ -84,3 +98,4 @@ async def init_db(pool: asyncpg.Pool) -> None:
         await conn.execute(_CREATE_TOPIC_PROGRESS)
         await conn.execute(_CREATE_TOPIC_MINDMAP)
         await conn.execute(_CREATE_TOPIC_INFOGRAPHIC)
+        await conn.execute(_CREATE_PERFORMANCE_INDEXES)

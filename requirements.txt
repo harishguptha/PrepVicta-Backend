@@ -8,3 +8,4 @@ asyncpg==0.30.0
 bcrypt==4.2.1
 dotenv
 google-auth==2.38.0
+pinecone==5.4.2
