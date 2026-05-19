@@ -1,18 +1,29 @@
-import os
+import asyncio
+
 from openai import AsyncOpenAI
-from dotenv import load_dotenv
 
-load_dotenv()
+from app.config import get_settings
 
-_client = None
+_client: AsyncOpenAI | None = None
+_semaphore: asyncio.Semaphore | None = None
+
 
 def _get_client() -> AsyncOpenAI:
     global _client
     if _client is None:
-        _client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY", ""))
+        settings = get_settings()
+        _client = AsyncOpenAI(api_key=settings.openai_api_key, timeout=settings.openai_timeout_seconds)
     return _client
 
-MODEL = os.getenv("OPENAI_PLANNING_MODEL", "gpt-4o-mini")
+
+def _get_semaphore() -> asyncio.Semaphore:
+    global _semaphore
+    if _semaphore is None:
+        _semaphore = asyncio.Semaphore(get_settings().openai_max_concurrency)
+    return _semaphore
+
+
+MODEL = get_settings().openai_model
 
 # ── Prompts ───────────────────────────────────────────────────────────────────
 
@@ -223,15 +234,16 @@ async def generate_mechanic(
     )
 
     client = _get_client()
-    response = await client.chat.completions.create(
-        model=MODEL,
-        messages=[
-            {"role": "system", "content": prompt["system"]},
-            {"role": "user",   "content": user_message},
-        ],
-        temperature=0.7,
-        max_tokens=1200,
-    )
+    async with _get_semaphore():
+        response = await client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {"role": "system", "content": prompt["system"]},
+                {"role": "user", "content": user_message},
+            ],
+            temperature=0.7,
+            max_tokens=1200,
+        )
 
     return {
         "mechanic":      mechanic,

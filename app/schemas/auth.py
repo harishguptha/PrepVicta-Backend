@@ -1,9 +1,9 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
 class LoginRequest(BaseModel):
     email: EmailStr
-    password: str
+    password: str = Field(..., min_length=6, max_length=128)
 
 
 class LoginResponse(BaseModel):
@@ -14,9 +14,9 @@ class LoginResponse(BaseModel):
 
 
 class CreateUserRequest(BaseModel):
-    full_name: str
+    full_name: str = Field(..., min_length=1, max_length=120)
     email: EmailStr
-    password: str
+    password: str = Field(..., min_length=6, max_length=128)
 
 
 class CreateUserResponse(BaseModel):
@@ -27,4 +27,4 @@ class CreateUserResponse(BaseModel):
 
 
 class GoogleAuthRequest(BaseModel):
-    credential: str
+    credential: str = Field(..., min_length=20, max_length=5000)

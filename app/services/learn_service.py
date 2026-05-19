@@ -1,19 +1,29 @@
-import os
+import asyncio
 import re
-from dotenv import load_dotenv
+
 import asyncpg
 from openai import AsyncOpenAI
 from pinecone import Pinecone
 
-load_dotenv()
+from app.cache import TTLCache
+from app.config import get_settings
 
-PINECONE_API_KEY = os.getenv("pinecone_api_key", "")
-INDEX_NAME       = os.getenv("PINECONE_INDEX", "")
-NAMESPACE        = os.getenv("PINECONE_NAMESPACE", "")
-LLM_MODEL        = os.getenv("OPENAI_PLANNING_MODEL", "gpt-4o-mini")
+settings = get_settings()
+PINECONE_API_KEY = settings.pinecone_api_key
+INDEX_NAME = settings.pinecone_index
+NAMESPACE = settings.pinecone_namespace
+LLM_MODEL = settings.openai_model
 
 _pinecone_index = None
 _llm_client: AsyncOpenAI | None = None
+_llm_semaphore: asyncio.Semaphore | None = None
+_chapters_cache: TTLCache[list[dict]] = TTLCache(settings.cache_max_items, settings.cache_ttl_seconds)
+_search_cache: TTLCache[list[dict]] = TTLCache(settings.cache_max_items, settings.cache_ttl_seconds)
+_chapter_images_cache: TTLCache[list[dict]] = TTLCache(settings.cache_max_items, settings.cache_ttl_seconds)
+_chapter_sections_cache: TTLCache[list[dict]] = TTLCache(settings.cache_max_items, settings.cache_ttl_seconds)
+_topic_cache: TTLCache[dict] = TTLCache(settings.cache_max_items, settings.cache_ttl_seconds)
+_raw_topic_cache: TTLCache[dict] = TTLCache(settings.cache_max_items, settings.cache_ttl_seconds)
+
 
 def _get_index():
     global _pinecone_index
@@ -25,8 +35,16 @@ def _get_index():
 def _get_llm_client() -> AsyncOpenAI:
     global _llm_client
     if _llm_client is None:
-        _llm_client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY", ""))
+        settings = get_settings()
+        _llm_client = AsyncOpenAI(api_key=settings.openai_api_key, timeout=settings.openai_timeout_seconds)
     return _llm_client
+
+
+def _get_llm_semaphore() -> asyncio.Semaphore:
+    global _llm_semaphore
+    if _llm_semaphore is None:
+        _llm_semaphore = asyncio.Semaphore(get_settings().openai_max_concurrency)
+    return _llm_semaphore
 
 _LLM_SYSTEM = (
     "You are an expert NEET biology teacher. Given raw topic content, produce a clear, "
@@ -89,15 +107,16 @@ async def _generate_llm_context(chapter: str, section: str, content: str, images
         user_content = text_block["text"]
         model = LLM_MODEL
 
-    response = await client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": _LLM_SYSTEM},
-            {"role": "user", "content": user_content},
-        ],
-        temperature=0.4,
-        max_tokens=1500,
-    )
+    async with _get_llm_semaphore():
+        response = await client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": _LLM_SYSTEM},
+                {"role": "user", "content": user_content},
+            ],
+            temperature=0.4,
+            max_tokens=1500,
+        )
     return (response.choices[0].message.content or "").strip()
 
 
@@ -172,6 +191,11 @@ async def get_user_progress(user_id: str, subject: str, pool: asyncpg.Pool) -> d
 
 async def get_chapters(subject: str, pool: asyncpg.Pool) -> list[dict]:
     """Return unique chapters with section counts from task_topic table."""
+    cache_key = subject.strip()
+    cached = _chapters_cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     rows = await pool.fetch(
         """
         SELECT
@@ -186,7 +210,7 @@ async def get_chapters(subject: str, pool: asyncpg.Pool) -> list[dict]:
         """,
         subject,
     )
-    return [
+    result = [
         {
             "chapter": r["chapter"],
             "subject": r["subject"],
@@ -194,12 +218,20 @@ async def get_chapters(subject: str, pool: asyncpg.Pool) -> list[dict]:
         }
         for r in rows
     ]
+    _chapters_cache.set(cache_key, result)
+    return result
 
 
 async def search_topics(query: str, subject: str, limit: int) -> list[dict]:
     """Semantic search via Pinecone integrated inference."""
+    cache_key = (query.strip().lower(), subject.strip(), limit)
+    cached = _search_cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     index = _get_index()
-    results = index.search_records(
+    results = await asyncio.to_thread(
+        index.search_records,
         namespace=NAMESPACE,
         top_k=limit,
         inputs={"text": query},
@@ -218,17 +250,24 @@ async def search_topics(query: str, subject: str, limit: int) -> list[dict]:
             "content": f.get("text", ""),
             "images":  _extract_images(f),
         })
+    _search_cache.set(cache_key, hits)
     return hits
 
 
 async def get_chapter_images(chapter: str, subject: str) -> list[dict]:
     """Return unique image URLs across all sections of a chapter from Pinecone."""
+    cache_key = (chapter.strip(), subject.strip())
+    cached = _chapter_images_cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     index = _get_index()
     alt = chapter.replace(' & ', ' and ') if ' & ' in chapter else chapter.replace(' and ', ' & ')
     chapter_filter = {"$in": [chapter, alt]} if alt != chapter else {"$eq": chapter}
     subj_filter = {"$in": ["Biology", "Botany", "Zoology"]} if subject == "Biology" else {"$eq": subject}
 
-    results = index.search_records(
+    results = await asyncio.to_thread(
+        index.search_records,
         namespace=NAMESPACE,
         top_k=40,
         inputs={"text": chapter},
@@ -244,17 +283,24 @@ async def get_chapter_images(chapter: str, subject: str) -> list[dict]:
             if url not in seen:
                 seen.add(url)
                 images.append({"section": section, "url": url})
+    _chapter_images_cache.set(cache_key, images)
     return images
 
 
 async def get_chapter_sections(chapter: str, subject: str) -> list[dict]:
     """Return all unique sections for a chapter from Pinecone (no row-count cap)."""
+    cache_key = (chapter.strip(), subject.strip())
+    cached = _chapter_sections_cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     index = _get_index()
     alt = chapter.replace(' & ', ' and ') if ' & ' in chapter else chapter.replace(' and ', ' & ')
     chapter_filter = {"$in": [chapter, alt]} if alt != chapter else {"$eq": chapter}
     subj_filter = {"$in": ["Biology", "Botany", "Zoology"]} if subject == "Biology" else {"$eq": subject}
 
-    results = index.search_records(
+    results = await asyncio.to_thread(
+        index.search_records,
         namespace=NAMESPACE,
         top_k=60,
         inputs={"text": chapter},
@@ -272,13 +318,20 @@ async def get_chapter_sections(chapter: str, subject: str) -> list[dict]:
                 "chapter": hit.fields.get("chapter", chapter),
                 "class":   hit.fields.get("class", ""),
             })
+    _chapter_sections_cache.set(cache_key, unique)
     return unique
 
 
-async def get_topic_by_chapter_section(chapter: str, section: str, pool: asyncpg.Pool) -> dict | None:
-    """Fetch a specific section by filtering Pinecone metadata, with LLM-enriched context cached in DB."""
+async def get_raw_topic_by_chapter_section(chapter: str, section: str) -> dict | None:
+    """Fetch a specific section from Pinecone without generating LLM context."""
+    cache_key = (chapter.strip(), section.strip())
+    cached = _raw_topic_cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     index = _get_index()
-    results = index.search_records(
+    results = await asyncio.to_thread(
+        index.search_records,
         namespace=NAMESPACE,
         top_k=1,
         inputs={"text": f"{chapter} {section}"},
@@ -288,21 +341,44 @@ async def get_topic_by_chapter_section(chapter: str, section: str, pool: asyncpg
     hits = results.result.hits
     if not hits:
         return None
+
     f = hits[0].fields
     content = f.get("text", "")
-
     images = _extract_images(f)
+
+    result = {
+        "id": hits[0].id,
+        "chapter": f.get("chapter", ""),
+        "section": f.get("section", ""),
+        "class": f.get("class", ""),
+        "content": content,
+        "images": images,
+    }
+    _raw_topic_cache.set(cache_key, result)
+    return result
+
+
+async def get_topic_by_chapter_section(chapter: str, section: str, pool: asyncpg.Pool) -> dict | None:
+    """Fetch a specific section with LLM-enriched context cached in DB."""
+    cache_key = (chapter.strip(), section.strip())
+    cached = _topic_cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    topic = await get_raw_topic_by_chapter_section(chapter, section)
+    if not topic:
+        return None
+
+    content = topic["content"]
+    images = topic["images"]
     llm_context = await _get_cached_llm_context(chapter, section, pool)
     if not llm_context:
         llm_context = await _generate_llm_context(chapter, section, content, images)
         await _store_llm_context(chapter, section, llm_context, pool)
 
-    return {
-        "id":          hits[0].id,
-        "chapter":     f.get("chapter", ""),
-        "section":     f.get("section", ""),
-        "class":       f.get("class", ""),
-        "content":     content,
-        "images":      images,
+    result = {
+        **topic,
         "llm_context": llm_context,
     }
+    _topic_cache.set(cache_key, result)
+    return result

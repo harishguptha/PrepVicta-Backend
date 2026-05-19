@@ -2,17 +2,25 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
+from app.config import get_settings
 from app.db.database import get_pool, close_pool
 from app.db.init import init_db
+from app.observability import RequestLoggingMiddleware, configure_logging
 from app.routers.auth import router as auth_router
 from app.routers.planning_agent import router as planning_agent_router
 from app.routers.learn import router as learn_router
 from app.routers.revision import router as revision_router
+from app.security import SecurityMiddleware
+
+settings = get_settings()
+configure_logging()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    settings.validate_required_for_startup()
     pool = await get_pool()
     await init_db(pool)
     yield
@@ -20,25 +28,21 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="PrepVicta Backend",
+    title=settings.app_name,
     description="AI-powered NEET preparation backend services.",
-    version="0.1.0",
+    version=settings.app_version,
     lifespan=lifespan,
 )
 
+app.add_middleware(RequestLoggingMiddleware)
+app.add_middleware(SecurityMiddleware)
+app.add_middleware(GZipMiddleware, minimum_size=1024)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:5174",
-        "http://127.0.0.1:5174",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ],
+    allow_origins=settings.allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Correlation-ID"],
 )
 
 app.include_router(planning_agent_router)
@@ -50,3 +54,10 @@ app.include_router(revision_router)
 @app.get("/health")
 def health_check() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/ready")
+async def readiness_check() -> dict[str, str]:
+    pool = await get_pool()
+    await pool.fetchval("SELECT 1")
+    return {"status": "ready"}

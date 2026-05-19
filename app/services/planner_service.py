@@ -1,23 +1,29 @@
+import asyncio
 import json
-import os
 import uuid
 from collections import deque
 from datetime import date, timedelta
 from typing import Any
 
 import asyncpg
-from dotenv import load_dotenv
 from openai import AsyncOpenAI
 
+from app.config import get_settings
 from app.data.neet_syllabus import SYLLABUS_SYSTEM_PROMPT
 from app.schemas.planning import DailyGeneratedTasks, PlanningAgentRequest, PlanningAgentResponse, PlanMetadata, StudyTask
 
-load_dotenv()
-
-DEFAULT_MODEL = os.getenv("OPENAI_PLANNING_MODEL", "gpt-4o-mini")
+DEFAULT_MODEL = get_settings().openai_model
+_openai_semaphore: asyncio.Semaphore | None = None
 
 _HOURS_TO_NUMERIC = {"1-2 hrs": 1.5, "2-4 hrs": 3.0, "4-6 hrs": 5.0, "6+ hrs": 7.0}
 _CONFIDENCE_TO_INT = {"Low": 1, "Medium": 2, "High": 3}
+
+
+def _get_openai_semaphore() -> asyncio.Semaphore:
+    global _openai_semaphore
+    if _openai_semaphore is None:
+        _openai_semaphore = asyncio.Semaphore(get_settings().openai_max_concurrency)
+    return _openai_semaphore
 
 
 def first_sunday_of_may(year: int) -> date:
@@ -190,14 +196,14 @@ async def _build_ai_guidance(
     metadata: PlanMetadata,
     first_day: DailyGeneratedTasks,
 ) -> tuple[str, list[str]]:
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
+    settings = get_settings()
+    if not settings.openai_api_key:
         return (
             "OpenAI guidance was skipped because OPENAI_API_KEY is not configured.",
             ["OPENAI_API_KEY is missing; returned deterministic planner guidance only."],
         )
 
-    client = AsyncOpenAI(api_key=api_key)
+    client = AsyncOpenAI(api_key=settings.openai_api_key, timeout=settings.openai_timeout_seconds)
     user_prompt = {
         "student": payload.model_dump(),
         "metadata": metadata.model_dump(mode="json"),
@@ -206,15 +212,16 @@ async def _build_ai_guidance(
     }
 
     try:
-        response = await client.chat.completions.create(
-            model=DEFAULT_MODEL,
-            messages=[
-                {"role": "system", "content": SYLLABUS_SYSTEM_PROMPT},
-                {"role": "user", "content": json.dumps(user_prompt)},
-            ],
-            temperature=0.2,
-            max_tokens=260,
-        )
+        async with _get_openai_semaphore():
+            response = await client.chat.completions.create(
+                model=DEFAULT_MODEL,
+                messages=[
+                    {"role": "system", "content": SYLLABUS_SYSTEM_PROMPT},
+                    {"role": "user", "content": json.dumps(user_prompt)},
+                ],
+                temperature=0.2,
+                max_tokens=260,
+            )
         return (response.choices[0].message.content or "").strip(), []
     except Exception as exc:
         return (
