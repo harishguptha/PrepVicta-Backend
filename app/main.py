@@ -3,14 +3,18 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.db.database import close_pool
+from app.db.database import get_pool, close_pool
+from app.db.init import init_db
 from app.routers.auth import router as auth_router
 from app.routers.planning_agent import router as planning_agent_router
 from app.routers.learn import router as learn_router
+from app.routers.revision import router as revision_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    pool = await get_pool()
+    await init_db(pool)
     yield
     await close_pool()
 
@@ -40,6 +44,7 @@ app.add_middleware(
 app.include_router(planning_agent_router)
 app.include_router(auth_router)
 app.include_router(learn_router)
+app.include_router(revision_router)
 
 
 @app.get("/health")

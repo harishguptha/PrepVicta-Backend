@@ -110,6 +110,66 @@ def _extract_images(fields: dict) -> list[str]:
     return images
 
 
+async def mark_topic_viewed(
+    user_id: str, chapter: str, section: str, subject: str, pool: asyncpg.Pool
+) -> None:
+    if not user_id:
+        return
+    await pool.execute(
+        """
+        INSERT INTO prepvicta_data.topic_progress (user_id, chapter, section, subject)
+        VALUES ($1::uuid, $2, $3, $4)
+        ON CONFLICT (user_id, chapter, section) DO NOTHING
+        """,
+        user_id, chapter, section, subject,
+    )
+
+
+async def get_user_progress(user_id: str, subject: str, pool: asyncpg.Pool) -> dict:
+    if not user_id:
+        return {"viewed_sections": [], "chapter_scores": {}}
+
+    viewed_rows = await pool.fetch(
+        """
+        SELECT chapter, section
+        FROM prepvicta_data.topic_progress
+        WHERE user_id = $1::uuid
+          AND (subject = $2 OR ($2 = 'Biology' AND subject IN ('Biology', 'Botany', 'Zoology')))
+        """,
+        user_id, subject,
+    )
+    viewed = [f"{r['chapter']}::{r['section']}" for r in viewed_rows]
+
+    score_rows = await pool.fetch(
+        """
+        SELECT DISTINCT ON (chapter)
+            chapter, score, total, attempted_at
+        FROM prepvicta_data.revision_attempt
+        WHERE user_id = $1::uuid AND section = '__CHAPTER_TEST__'
+        ORDER BY chapter, attempted_at DESC
+        """,
+        user_id,
+    )
+    chapter_scores: dict = {}
+    for r in score_rows:
+        correct = r["score"]
+        total = r["total"]
+        wrong = total - correct
+        neet_score = correct * 4 - wrong
+        max_score = total * 4
+        pct = round((neet_score / max_score) * 100) if max_score > 0 else 0
+        chapter_scores[r["chapter"]] = {
+            "correct": correct,
+            "total": total,
+            "neet_score": neet_score,
+            "max_score": max_score,
+            "pct": pct,
+            "attempted_at": r["attempted_at"].isoformat(),
+        }
+
+    return {"viewed_sections": viewed, "chapter_scores": chapter_scores}
+
+
 async def get_chapters(subject: str, pool: asyncpg.Pool) -> list[dict]:
     """Return unique chapters with section counts from task_topic table."""
     rows = await pool.fetch(
@@ -159,6 +219,60 @@ async def search_topics(query: str, subject: str, limit: int) -> list[dict]:
             "images":  _extract_images(f),
         })
     return hits
+
+
+async def get_chapter_images(chapter: str, subject: str) -> list[dict]:
+    """Return unique image URLs across all sections of a chapter from Pinecone."""
+    index = _get_index()
+    alt = chapter.replace(' & ', ' and ') if ' & ' in chapter else chapter.replace(' and ', ' & ')
+    chapter_filter = {"$in": [chapter, alt]} if alt != chapter else {"$eq": chapter}
+    subj_filter = {"$in": ["Biology", "Botany", "Zoology"]} if subject == "Biology" else {"$eq": subject}
+
+    results = index.search_records(
+        namespace=NAMESPACE,
+        top_k=40,
+        inputs={"text": chapter},
+        fields=["section", "img_0", "img_1", "img_2", "img_3", "img_4", "img_5"],
+        filter={"chapter": chapter_filter, "subject": subj_filter},
+    )
+    images: list[dict] = []
+    seen: set[str] = set()
+    for hit in results.result.hits:
+        section = hit.fields.get("section", "")
+        imgs = _extract_images(hit.fields)
+        for url in imgs:
+            if url not in seen:
+                seen.add(url)
+                images.append({"section": section, "url": url})
+    return images
+
+
+async def get_chapter_sections(chapter: str, subject: str) -> list[dict]:
+    """Return all unique sections for a chapter from Pinecone (no row-count cap)."""
+    index = _get_index()
+    alt = chapter.replace(' & ', ' and ') if ' & ' in chapter else chapter.replace(' and ', ' & ')
+    chapter_filter = {"$in": [chapter, alt]} if alt != chapter else {"$eq": chapter}
+    subj_filter = {"$in": ["Biology", "Botany", "Zoology"]} if subject == "Biology" else {"$eq": subject}
+
+    results = index.search_records(
+        namespace=NAMESPACE,
+        top_k=60,
+        inputs={"text": chapter},
+        fields=["section", "chapter", "class"],
+        filter={"chapter": chapter_filter, "subject": subj_filter},
+    )
+    unique: list[dict] = []
+    seen: set[str] = set()
+    for hit in results.result.hits:
+        sec = hit.fields.get("section", "")
+        if sec and sec not in seen:
+            seen.add(sec)
+            unique.append({
+                "section": sec,
+                "chapter": hit.fields.get("chapter", chapter),
+                "class":   hit.fields.get("class", ""),
+            })
+    return unique
 
 
 async def get_topic_by_chapter_section(chapter: str, section: str, pool: asyncpg.Pool) -> dict | None:

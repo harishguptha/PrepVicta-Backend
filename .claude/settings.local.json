@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find '/c/Users/HarishGupta/OneDrive - ConceptVines/Desktop/project/personal/PrepVicta-Frontend/src' -type f -path '*component*' \\\\\\( -name \"*revision*\" -o -name \"*Revision*\" -o -name \"*learn*\" -o -name \"*Learn*\" \\\\\\) 2>/dev/null)",
+      "Read(//c/Users/HarishGupta/OneDrive - ConceptVines/Desktop/project/personal/PrepVicta-Frontend/src/**)",
+      "Bash(grep -r \"RevisionEngine\\\\|revision\" '/c/Users/HarishGupta/OneDrive - ConceptVines/Desktop/project/personal/PrepVicta-Frontend/src' --include=\"*.jsx\" --include=\"*.js\" --include=\"*.tsx\" --include=\"*.ts\" -l 2>/dev/null | head -15)",
+      "Bash(find '/c/Users/HarishGupta/OneDrive - ConceptVines/Desktop/project/personal/PrepVicta-Frontend' -type f -name \"*.jsx\" -o -name \"*.tsx\" | sort)",
+      "Read(//c/Users/HarishGupta/OneDrive - ConceptVines/Desktop/project/personal/PrepVicta-Frontend/**)"
+    ]
+  }
+}

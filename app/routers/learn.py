@@ -1,7 +1,10 @@
 from fastapi import APIRouter, HTTPException, Query, status
 from pydantic import BaseModel
 from app.db.database import get_pool
-from app.services.learn_service import get_chapters, search_topics, get_topic_by_chapter_section
+from app.services.learn_service import (
+    get_chapters, search_topics, get_topic_by_chapter_section,
+    get_chapter_sections, mark_topic_viewed, get_user_progress,
+)
 from app.services.generate_service import generate_mechanic, MECHANIC_LABELS
 
 router = APIRouter(prefix="/learn", tags=["Learn Center"])
@@ -41,6 +44,38 @@ async def topic(chapter: str = Query(...), section: str = Query(...)):
         return result
     except HTTPException:
         raise
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+
+
+@router.get("/sections")
+async def sections(chapter: str = Query(...), subject: str = Query(default="Biology")):
+    try:
+        return await get_chapter_sections(chapter, subject)
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+
+
+@router.get("/progress")
+async def get_progress(user_id: str = Query(...), subject: str = Query(default="Biology")):
+    try:
+        pool = await get_pool()
+        return await get_user_progress(user_id, subject, pool)
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+
+
+@router.post("/progress")
+async def mark_progress(
+    user_id: str = Query(...),
+    chapter: str = Query(...),
+    section: str = Query(...),
+    subject: str = Query(default="Biology"),
+):
+    try:
+        pool = await get_pool()
+        await mark_topic_viewed(user_id, chapter, section, subject, pool)
+        return {"ok": True}
     except Exception as exc:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
 

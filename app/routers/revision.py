@@ -4,6 +4,7 @@ from app.db.database import get_pool
 from app.services.revision_service import (
     get_revision_summary, generate_and_store_summary,
     get_quiz, generate_and_store_quiz, save_attempt, get_revision_topics,
+    get_chapter_quiz,
 )
 from app.services.learn_service import get_topic_by_chapter_section
 
@@ -43,7 +44,7 @@ async def summary(
         if existing:
             return existing
 
-        topic = await get_topic_by_chapter_section(chapter, section, subject)
+        topic = await get_topic_by_chapter_section(chapter, section, pool)
         content = topic["content"] if topic else f"{chapter} — {section}"
 
         return await generate_and_store_summary(chapter, section, subject, content, pool)
@@ -53,7 +54,6 @@ async def summary(
 
 @router.get("/quiz")
 async def quiz(
-    user_id: str = Query(...),
     chapter: str = Query(...),
     section: str = Query(...),
     subject: str = Query(default="Biology"),
@@ -61,20 +61,31 @@ async def quiz(
 ):
     try:
         pool = await get_pool()
-        existing = await get_quiz(user_id, chapter, section, pool)
+        existing = await get_quiz(chapter, section, pool)
         if existing:
             return existing
 
-        topic = await get_topic_by_chapter_section(chapter, section, subject)
+        topic = await get_topic_by_chapter_section(chapter, section, pool)
         content = topic["content"] if topic else f"{chapter} — {section}"
 
         return await generate_and_store_quiz(
-            user_id=user_id, subject=subject,
-            chapter=chapter, section=section,
+            subject=subject, chapter=chapter, section=section,
             content=content, priority=priority, pool=pool,
         )
     except HTTPException:
         raise
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+
+
+@router.get("/chapter-quiz")
+async def chapter_quiz(
+    chapter: str = Query(...),
+    subject: str = Query(default="Biology"),
+):
+    try:
+        pool = await get_pool()
+        return await get_chapter_quiz(chapter, subject, pool)
     except Exception as exc:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
 

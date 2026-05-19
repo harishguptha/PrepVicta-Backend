@@ -2,6 +2,7 @@ import os, json, random
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
 import asyncpg
+from app.services.learn_service import get_chapter_images
 
 load_dotenv()
 
@@ -137,10 +138,10 @@ async def generate_and_store_summary(
     return {"chapter": chapter, "section": section, **summary}
 
 
-async def get_quiz(user_id: str, chapter: str, section: str, pool: asyncpg.Pool) -> dict | None:
+async def get_quiz(chapter: str, section: str, pool: asyncpg.Pool) -> dict | None:
     row = await pool.fetchrow(
-        "SELECT questions FROM prepvicta_data.revision_quiz WHERE user_id = $1 AND chapter = $2 AND section = $3",
-        user_id, chapter, section,
+        "SELECT questions FROM prepvicta_data.revision_quiz WHERE chapter = $1 AND section = $2",
+        chapter, section,
     )
     if row:
         qs = row["questions"] if isinstance(row["questions"], list) else json.loads(row["questions"])
@@ -150,7 +151,7 @@ async def get_quiz(user_id: str, chapter: str, section: str, pool: asyncpg.Pool)
 
 
 async def generate_and_store_quiz(
-    user_id: str, subject: str, chapter: str, section: str,
+    subject: str, chapter: str, section: str,
     content: str, priority: str, pool: asyncpg.Pool,
 ) -> dict:
     client = _get_client()
@@ -178,11 +179,11 @@ async def generate_and_store_quiz(
 
     await pool.execute(
         """
-        INSERT INTO prepvicta_data.revision_quiz (user_id, subject, chapter, section, questions)
-        VALUES ($1, $2, $3, $4, $5)
-        ON CONFLICT (user_id, chapter, section) DO UPDATE SET questions = EXCLUDED.questions
+        INSERT INTO prepvicta_data.revision_quiz (subject, chapter, section, questions)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (chapter, section) DO UPDATE SET questions = EXCLUDED.questions
         """,
-        user_id, subject, chapter, section, json.dumps(questions),
+        subject, chapter, section, json.dumps(questions),
     )
     random.shuffle(questions)
     return {"chapter": chapter, "section": section, "questions": questions}
@@ -232,6 +233,148 @@ async def save_attempt(
     }
 
 
+_CHAPTER_QUIZ_SYSTEM = (
+    "You are a NEET exam expert. Generate high-quality MCQ questions that comprehensively cover an entire textbook chapter. "
+    "Questions must test all key topics at NEET difficulty. Return ONLY valid JSON."
+)
+
+_CHAPTER_QUIZ_USER = """Generate exactly 30 NEET-style MCQ questions for the chapter '{chapter}' ({subject}).
+
+Key topics in this chapter: {topics}
+
+Return a JSON object with this structure:
+{{
+  "questions": [
+    {{
+      "question": "Question text here?",
+      "options": ["Option A text", "Option B text", "Option C text", "Option D text"],
+      "correct": 0,
+      "explanation": "Why this answer is correct and others are wrong.",
+      "topic": "Which topic this tests",
+      "image": null
+    }}
+  ]
+}}
+
+Rules:
+- Generate EXACTLY 30 questions spread across ALL topics listed
+- correct is 0-based index (0=A, 1=B, 2=C, 3=D)
+- Mix difficulty: ~30% easy, ~40% medium, ~30% hard
+- Cover definitions, classifications, processes, numerical values
+- Set "image" to null for all questions
+- Return ONLY the JSON object
+"""
+
+_CHAPTER_QUIZ_USER_WITH_IMAGES = """Generate exactly 30 NEET-style MCQ questions for the chapter '{chapter}' ({subject}).
+
+Key topics in this chapter: {topics}
+
+The chapter contains the following diagrams/figures (shown below). For 4-6 questions, ask about what students can observe in these diagrams.
+
+Image reference list (use exact URLs when referencing):
+{image_refs}
+
+Return a JSON object with this structure:
+{{
+  "questions": [
+    {{
+      "question": "Question text here?",
+      "options": ["Option A text", "Option B text", "Option C text", "Option D text"],
+      "correct": 0,
+      "explanation": "Why this answer is correct and others are wrong.",
+      "topic": "Which topic this tests",
+      "image": null
+    }}
+  ]
+}}
+
+Rules:
+- Generate EXACTLY 30 questions spread across ALL topics
+- correct is 0-based index (0=A, 1=B, 2=C, 3=D)
+- Mix difficulty: ~30% easy, ~40% medium, ~30% hard
+- For diagram-based questions: set "image" to the EXACT URL from the reference list above
+- For all other questions: set "image" to null
+- Include 4-6 diagram/figure-based questions using the images provided
+- Return ONLY the JSON object
+"""
+
+_CHAPTER_TEST_SECTION = "__CHAPTER_TEST_v2__"
+
+
+async def get_chapter_quiz(chapter: str, subject: str, pool: asyncpg.Pool) -> dict:
+    row = await pool.fetchrow(
+        "SELECT questions FROM prepvicta_data.revision_quiz WHERE chapter = $1 AND section = $2",
+        chapter, _CHAPTER_TEST_SECTION,
+    )
+    if row:
+        qs = row["questions"] if isinstance(row["questions"], list) else json.loads(row["questions"])
+        random.shuffle(qs)
+        return {"chapter": chapter, "questions": qs, "total": len(qs)}
+
+    topics_rows = await pool.fetch(
+        """
+        SELECT topic FROM task_topic
+        WHERE chapter = $1
+          AND CASE WHEN subject IN ('Botany','Zoology') THEN 'Biology' ELSE subject END = $2
+        ORDER BY weight_pct DESC NULLS LAST, pyq_qs DESC NULLS LAST
+        """,
+        chapter, subject,
+    )
+    topic_list = ", ".join(r["topic"] for r in topics_rows) if topics_rows else chapter
+
+    # Fetch chapter images from Pinecone
+    chapter_images = await get_chapter_images(chapter, subject)
+    images_to_use = chapter_images[:6]  # cap to avoid token overload
+
+    client = _get_client()
+
+    if images_to_use:
+        image_refs = "\n".join(
+            f"- Section '{img['section']}': {img['url']}" for img in images_to_use
+        )
+        text_prompt = _CHAPTER_QUIZ_USER_WITH_IMAGES.format(
+            chapter=chapter, subject=subject, topics=topic_list, image_refs=image_refs,
+        )
+        user_content: list | str = [{"type": "text", "text": text_prompt}]
+        for img in images_to_use:
+            user_content.append({"type": "text", "text": f"[Diagram — section: {img['section']}]"})
+            user_content.append({"type": "image_url", "image_url": {"url": img["url"], "detail": "low"}})
+        model_to_use = "gpt-4o"
+    else:
+        user_content = _CHAPTER_QUIZ_USER.format(
+            chapter=chapter, subject=subject, topics=topic_list,
+        )
+        model_to_use = MODEL
+
+    response = await client.chat.completions.create(
+        model=model_to_use,
+        messages=[
+            {"role": "system", "content": _CHAPTER_QUIZ_SYSTEM},
+            {"role": "user", "content": user_content},
+        ],
+        temperature=0.6,
+        max_tokens=7000,
+        response_format={"type": "json_object"},
+    )
+    raw = (response.choices[0].message.content or "").strip()
+    try:
+        parsed = json.loads(raw)
+        questions = parsed if isinstance(parsed, list) else parsed.get("questions", [])
+    except Exception:
+        raise ValueError("Failed to parse chapter quiz JSON")
+
+    await pool.execute(
+        """
+        INSERT INTO prepvicta_data.revision_quiz (subject, chapter, section, questions)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (chapter, section) DO UPDATE SET questions = EXCLUDED.questions
+        """,
+        subject, chapter, _CHAPTER_TEST_SECTION, json.dumps(questions),
+    )
+    random.shuffle(questions)
+    return {"chapter": chapter, "questions": questions, "total": len(questions)}
+
+
 async def get_revision_topics(user_id: str, subject: str, pool: asyncpg.Pool) -> list[dict]:
     rows = await pool.fetch(
         """
@@ -240,7 +383,7 @@ async def get_revision_topics(user_id: str, subject: str, pool: asyncpg.Pool) ->
             tt.is_done AS completed, tt.completed_at,
             EXISTS(
                 SELECT 1 FROM prepvicta_data.revision_quiz rq
-                WHERE rq.user_id = tt.user_id AND rq.chapter = tt.chapter AND rq.section = tt.topic
+                WHERE rq.chapter = tt.chapter AND rq.section = tt.topic
             ) AS quiz_ready,
             EXISTS(
                 SELECT 1 FROM prepvicta_data.revision_summary rs
