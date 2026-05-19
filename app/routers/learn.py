@@ -4,6 +4,8 @@ from app.db.database import get_pool
 from app.services.learn_service import (
     get_chapters, search_topics, get_topic_by_chapter_section,
     get_chapter_sections, mark_topic_viewed, get_user_progress,
+    get_mind_map_cached, generate_and_store_mind_map,
+    get_infographic_cached, generate_and_store_infographic,
 )
 from app.services.generate_service import generate_mechanic, MECHANIC_LABELS
 
@@ -83,6 +85,42 @@ async def mark_progress(
 @router.get("/mechanics")
 async def mechanics():
     return [{"key": k, "label": v} for k, v in MECHANIC_LABELS.items()]
+
+
+@router.get("/mindmap")
+async def mindmap(
+    chapter: str = Query(...),
+    section: str = Query(...),
+    subject: str = Query(default="Biology"),
+):
+    try:
+        pool = await get_pool()
+        existing = await get_mind_map_cached(chapter, section, pool)
+        if existing:
+            return existing
+        topic = await get_topic_by_chapter_section(chapter, section, pool)
+        content = topic["content"] if topic else f"{chapter} — {section}"
+        return await generate_and_store_mind_map(chapter, section, subject, content, pool)
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+
+
+@router.get("/infographic")
+async def infographic(
+    chapter: str = Query(...),
+    section: str = Query(...),
+    subject: str = Query(default="Biology"),
+):
+    try:
+        pool = await get_pool()
+        existing = await get_infographic_cached(chapter, section, pool)
+        if existing:
+            return existing
+        topic = await get_topic_by_chapter_section(chapter, section, pool)
+        content = topic["content"] if topic else f"{chapter} — {section}"
+        return await generate_and_store_infographic(chapter, section, subject, content, pool)
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
 
 
 @router.post("/generate")

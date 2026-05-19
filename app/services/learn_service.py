@@ -1,9 +1,11 @@
 import os
 import re
+import json
 from dotenv import load_dotenv
 import asyncpg
 from openai import AsyncOpenAI
 from pinecone import Pinecone
+from pinecone.data.dataclasses.search_query import SearchQuery
 
 load_dotenv()
 
@@ -201,17 +203,15 @@ async def search_topics(query: str, subject: str, limit: int) -> list[dict]:
     index = _get_index()
     results = index.search_records(
         namespace=NAMESPACE,
-        top_k=limit,
-        inputs={"text": query},
+        query=SearchQuery(inputs={"text": query}, top_k=limit, filter={"subject": {"$eq": subject}}),
         fields=["text", "chapter", "section", "class", "image_count", "img_0", "img_1", "img_2", "img_3", "img_4"],
-        filter={"subject": {"$eq": subject}},
     )
     hits = []
     for hit in results.result.hits:
         f = hit.fields
         hits.append({
-            "id":      hit.id,
-            "score":   round(hit.score, 3),
+            "id":      hit["_id"],
+            "score":   round(hit["_score"], 3),
             "chapter": f.get("chapter", ""),
             "section": f.get("section", ""),
             "class":   f.get("class", ""),
@@ -230,10 +230,8 @@ async def get_chapter_images(chapter: str, subject: str) -> list[dict]:
 
     results = index.search_records(
         namespace=NAMESPACE,
-        top_k=40,
-        inputs={"text": chapter},
+        query=SearchQuery(inputs={"text": chapter}, top_k=40, filter={"chapter": chapter_filter, "subject": subj_filter}),
         fields=["section", "img_0", "img_1", "img_2", "img_3", "img_4", "img_5"],
-        filter={"chapter": chapter_filter, "subject": subj_filter},
     )
     images: list[dict] = []
     seen: set[str] = set()
@@ -256,10 +254,8 @@ async def get_chapter_sections(chapter: str, subject: str) -> list[dict]:
 
     results = index.search_records(
         namespace=NAMESPACE,
-        top_k=60,
-        inputs={"text": chapter},
+        query=SearchQuery(inputs={"text": chapter}, top_k=60, filter={"chapter": chapter_filter, "subject": subj_filter}),
         fields=["section", "chapter", "class"],
-        filter={"chapter": chapter_filter, "subject": subj_filter},
     )
     unique: list[dict] = []
     seen: set[str] = set()
@@ -275,15 +271,65 @@ async def get_chapter_sections(chapter: str, subject: str) -> list[dict]:
     return unique
 
 
+async def get_infographic_cached(chapter: str, section: str, pool: asyncpg.Pool) -> dict | None:
+    row = await pool.fetchrow(
+        "SELECT infographic FROM prepvicta_data.topic_infographic WHERE chapter = $1 AND section = $2",
+        chapter, section,
+    )
+    if row:
+        return row["infographic"] if isinstance(row["infographic"], dict) else json.loads(row["infographic"])
+    return None
+
+
+async def generate_and_store_infographic(
+    chapter: str, section: str, subject: str, content: str, pool: asyncpg.Pool
+) -> dict:
+    from app.services.generate_service import generate_infographic_json
+    data = await generate_infographic_json(chapter, section, content)
+    await pool.execute(
+        """
+        INSERT INTO prepvicta_data.topic_infographic (chapter, section, subject, infographic)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (chapter, section) DO UPDATE SET infographic = EXCLUDED.infographic
+        """,
+        chapter, section, subject, json.dumps(data),
+    )
+    return data
+
+
+async def get_mind_map_cached(chapter: str, section: str, pool: asyncpg.Pool) -> dict | None:
+    row = await pool.fetchrow(
+        "SELECT mindmap FROM prepvicta_data.topic_mindmap WHERE chapter = $1 AND section = $2",
+        chapter, section,
+    )
+    if row:
+        return row["mindmap"] if isinstance(row["mindmap"], dict) else json.loads(row["mindmap"])
+    return None
+
+
+async def generate_and_store_mind_map(
+    chapter: str, section: str, subject: str, content: str, pool: asyncpg.Pool
+) -> dict:
+    from app.services.generate_service import generate_mind_map_json
+    data = await generate_mind_map_json(chapter, section, content)
+    await pool.execute(
+        """
+        INSERT INTO prepvicta_data.topic_mindmap (chapter, section, subject, mindmap)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (chapter, section) DO UPDATE SET mindmap = EXCLUDED.mindmap
+        """,
+        chapter, section, subject, json.dumps(data),
+    )
+    return data
+
+
 async def get_topic_by_chapter_section(chapter: str, section: str, pool: asyncpg.Pool) -> dict | None:
     """Fetch a specific section by filtering Pinecone metadata, with LLM-enriched context cached in DB."""
     index = _get_index()
     results = index.search_records(
         namespace=NAMESPACE,
-        top_k=1,
-        inputs={"text": f"{chapter} {section}"},
+        query=SearchQuery(inputs={"text": f"{chapter} {section}"}, top_k=1, filter={"chapter": {"$eq": chapter}, "section": {"$eq": section}}),
         fields=["text", "chapter", "section", "class", "image_count", "img_0", "img_1", "img_2", "img_3", "img_4"],
-        filter={"chapter": {"$eq": chapter}, "section": {"$eq": section}},
     )
     hits = results.result.hits
     if not hits:
@@ -298,7 +344,7 @@ async def get_topic_by_chapter_section(chapter: str, section: str, pool: asyncpg
         await _store_llm_context(chapter, section, llm_context, pool)
 
     return {
-        "id":          hits[0].id,
+        "id":          hits[0]["_id"],
         "chapter":     f.get("chapter", ""),
         "section":     f.get("section", ""),
         "class":       f.get("class", ""),

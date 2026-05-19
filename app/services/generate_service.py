@@ -1,4 +1,5 @@
 import os
+import json
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
 
@@ -192,6 +193,146 @@ _PROMPTS = {
         ),
     },
 }
+
+# ── Mind Map JSON ─────────────────────────────────────────────────────────────
+
+_MIND_MAP_JSON_SYSTEM = (
+    "You are a NEET exam expert. Create structured mind map data for visual learning. "
+    "Return ONLY valid JSON, no extra text, no markdown code fences."
+)
+
+_MIND_MAP_JSON_USER = """Create a visual mind map for NEET topic '{section}' from chapter '{chapter}'.
+
+Topic content:
+{content}
+
+Return a JSON object with exactly this structure:
+{{
+  "center": "{section}",
+  "branches": [
+    {{
+      "label": "Main concept name (2-4 words)",
+      "children": [
+        "Specific fact or process — concise, NEET-relevant",
+        "Another key point with exact values or names"
+      ]
+    }}
+  ]
+}}
+
+Rules:
+- Create 4-6 main branches covering ALL key concepts in the topic
+- Each branch: 2-5 children with specific NEET facts (numbers, names, processes)
+- Each child: max 65 characters, factual and directly exam-relevant
+- Branch labels: concise, 2-4 words max
+- Cover everything important — classifications, processes, exceptions, values
+- Return ONLY the JSON object, nothing else
+"""
+
+
+_INFOGRAPHIC_JSON_SYSTEM = (
+    "You are a NEET exam expert. Create structured infographic data for visual learning. "
+    "Return ONLY valid JSON, no extra text, no markdown code fences."
+)
+
+_INFOGRAPHIC_JSON_USER = """Create a visual infographic for NEET topic '{section}' from chapter '{chapter}'.
+
+Topic content:
+{content}
+
+Return a JSON object with exactly this structure:
+{{
+  "title": "{section}",
+  "sections": [
+    {{
+      "heading": "Quick Facts",
+      "icon": "⚡",
+      "color": "yellow",
+      "type": "bullets",
+      "items": ["fact 1", "fact 2", "fact 3"]
+    }},
+    {{
+      "heading": "Must Remember",
+      "icon": "📌",
+      "color": "blue",
+      "type": "pairs",
+      "items": [["Term or Concept", "Value or Meaning"], ["Another term", "Its value"]]
+    }},
+    {{
+      "heading": "Key Processes",
+      "icon": "🔁",
+      "color": "green",
+      "type": "steps",
+      "items": ["Step 1 description", "Step 2 description", "Step 3 description"]
+    }},
+    {{
+      "heading": "NEET Traps",
+      "icon": "⚠️",
+      "color": "red",
+      "type": "bullets",
+      "items": ["Common misconception → correct fact"]
+    }},
+    {{
+      "heading": "PYQ Focus",
+      "icon": "🎯",
+      "color": "purple",
+      "type": "bullets",
+      "items": ["What NEET has asked from this topic"]
+    }}
+  ]
+}}
+
+Rules:
+- Quick Facts: 4-6 most important facts, each under 80 characters
+- Must Remember: 4-8 key term/value pairs (classifications, values, exceptions)
+- Key Processes: only include if topic has a process/sequence, else keep 1-2 items
+- NEET Traps: 2-4 real misconceptions students make
+- PYQ Focus: 2-4 specific things NEET has tested (e.g. "Which phylum has radial symmetry?")
+- Return ONLY the JSON object, nothing else
+"""
+
+
+async def generate_infographic_json(chapter: str, section: str, content: str) -> dict:
+    client = _get_client()
+    response = await client.chat.completions.create(
+        model=MODEL,
+        messages=[
+            {"role": "system", "content": _INFOGRAPHIC_JSON_SYSTEM},
+            {"role": "user", "content": _INFOGRAPHIC_JSON_USER.format(
+                section=section, chapter=chapter, content=content[:5000]
+            )},
+        ],
+        temperature=0.4,
+        max_tokens=1200,
+        response_format={"type": "json_object"},
+    )
+    raw = (response.choices[0].message.content or "").strip()
+    try:
+        return json.loads(raw)
+    except Exception:
+        raise ValueError("Failed to parse infographic JSON from AI response")
+
+
+async def generate_mind_map_json(chapter: str, section: str, content: str) -> dict:
+    client = _get_client()
+    response = await client.chat.completions.create(
+        model=MODEL,
+        messages=[
+            {"role": "system", "content": _MIND_MAP_JSON_SYSTEM},
+            {"role": "user", "content": _MIND_MAP_JSON_USER.format(
+                section=section, chapter=chapter, content=content[:5000]
+            )},
+        ],
+        temperature=0.4,
+        max_tokens=1000,
+        response_format={"type": "json_object"},
+    )
+    raw = (response.choices[0].message.content or "").strip()
+    try:
+        return json.loads(raw)
+    except Exception:
+        raise ValueError("Failed to parse mind map JSON from AI response")
+
 
 MECHANIC_LABELS = {
     "mnemonic": "Mnemonics",

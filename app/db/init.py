@@ -50,9 +50,37 @@ CREATE TABLE IF NOT EXISTS prepvicta_data.revision_attempt (
 """
 
 
+_CREATE_TOPIC_MINDMAP = """
+CREATE TABLE IF NOT EXISTS prepvicta_data.topic_mindmap (
+    id         UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
+    chapter    TEXT         NOT NULL,
+    section    TEXT         NOT NULL,
+    subject    TEXT         NOT NULL DEFAULT 'Biology',
+    mindmap    JSONB        NOT NULL DEFAULT '{}',
+    created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    UNIQUE (chapter, section)
+);
+"""
+
+
+_CREATE_TOPIC_INFOGRAPHIC = """
+CREATE TABLE IF NOT EXISTS prepvicta_data.topic_infographic (
+    id           UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
+    chapter      TEXT         NOT NULL,
+    section      TEXT         NOT NULL,
+    subject      TEXT         NOT NULL DEFAULT 'Biology',
+    infographic  JSONB        NOT NULL DEFAULT '{}',
+    created_at   TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    UNIQUE (chapter, section)
+);
+"""
+
+
 async def init_db(pool: asyncpg.Pool) -> None:
     async with pool.acquire() as conn:
         await conn.execute(_CREATE_REVISION_SUMMARY)
         await conn.execute(_CREATE_REVISION_QUIZ)
         await conn.execute(_CREATE_REVISION_ATTEMPT)
         await conn.execute(_CREATE_TOPIC_PROGRESS)
+        await conn.execute(_CREATE_TOPIC_MINDMAP)
+        await conn.execute(_CREATE_TOPIC_INFOGRAPHIC)
