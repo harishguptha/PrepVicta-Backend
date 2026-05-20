@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 
 ClassStage = Literal["Class 11", "Class 12", "Repeater"]
-AttemptYear = Literal[2027, 2028]
+AttemptYear = Literal[2026, 2027, 2028]
 DailyStudyHours = Literal["1-2 hrs", "2-4 hrs", "4-6 hrs", "6+ hrs"]
 Subject = Literal["Physics", "Chemistry", "Biology"]
 ConfidenceLevel = Literal["Low", "Medium", "High"]

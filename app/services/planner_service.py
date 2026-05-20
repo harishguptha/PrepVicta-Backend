@@ -170,11 +170,7 @@ def _generate_schedule(
     start_date: date,
     plan_end_date: date,
 ) -> list[DailyGeneratedTasks]:
-    plan_days = (plan_end_date - start_date).days + 1
-    if plan_days <= 0:
-        raise ValueError(
-            f"Cannot generate a plan ending on {plan_end_date.isoformat()} because it is before {start_date.isoformat()}."
-        )
+    plan_days = max(1, (plan_end_date - start_date).days + 1)
 
     tasks_count = _tasks_per_day(payload.daily_study_hours)
     estimated_minutes = max(30, _daily_minutes(payload.daily_study_hours) // tasks_count)

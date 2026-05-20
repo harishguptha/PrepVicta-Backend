@@ -11,7 +11,7 @@ The frontend "Today's Plan" shows:
 Onboarding fields:
 1. Full name
 2. Current class / stage: Class 11, Class 12, Repeater
-3. NEET attempt year: 2027 or 2028
+3. NEET attempt year: 2026, 2027, or 2028
 4. Daily study hours: 1-2 hrs, 2-4 hrs, 4-6 hrs, 6+ hrs
 5. Strongest subject: Physics, Chemistry, Biology
 6. Weakest subject: Physics, Chemistry, Biology
