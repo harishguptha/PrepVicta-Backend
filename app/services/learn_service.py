@@ -287,8 +287,23 @@ async def get_chapter_images(chapter: str, subject: str) -> list[dict]:
     return images
 
 
+def _normalize_chapter(name: str) -> str:
+    # Fix mojibake en/em dash variants → plain space, and & ↔ and handled separately
+    for dash in [" – ", " — ", " - ", " − "]:
+        name = name.replace(dash, " ")
+    # Fix double-encoded mojibake (â€" / â€" patterns)
+    try:
+        name = name.encode("cp1252").decode("utf-8")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        pass
+    for dash in [" – ", " — ", " - "]:
+        name = name.replace(dash, " ")
+    return name.strip()
+
+
 async def get_chapter_sections(chapter: str, subject: str) -> list[dict]:
     """Return all unique sections for a chapter from Pinecone (no row-count cap)."""
+    chapter = _normalize_chapter(chapter)
     cache_key = (chapter.strip(), subject.strip())
     cached = _chapter_sections_cache.get(cache_key)
     if cached is not None:
@@ -436,6 +451,7 @@ async def get_raw_topic_by_chapter_section(chapter: str, section: str) -> dict |
 
 async def get_topic_by_chapter_section(chapter: str, section: str, pool: asyncpg.Pool) -> dict | None:
     """Fetch a specific section with LLM-enriched context cached in DB."""
+    chapter = _normalize_chapter(chapter)
     cache_key = (chapter.strip(), section.strip())
     cached = _topic_cache.get(cache_key)
     if cached is not None:

@@ -190,7 +190,7 @@ SYLLABUS_CHAPTERS = [
     {
         "subject": "Biology",
         "class_level": 12,
-        "chapter": "Biotechnology - Principles & Processes",
+        "chapter": "Biotechnology Principles and Processes",
         "topics": ["rDNA technology", "Restriction enzymes", "PCR", "Gel electrophoresis", "Vectors"],
         "pyq_qs": 4,
         "weight_pct": 5,
