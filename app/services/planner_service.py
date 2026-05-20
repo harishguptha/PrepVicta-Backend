@@ -58,8 +58,10 @@ def _class_stage_bonus(class_stage: str, class_level: int) -> int:
 
 def _subject_cycle(payload: PlanningAgentRequest) -> deque[str]:
     weights = {"Biology": 4, "Chemistry": 2, "Physics": 2}
-    weights[payload.weakest_subject] += 2
-    weights[payload.strongest_subject] = max(1, weights[payload.strongest_subject] - 1)
+    for s in payload.weakest_subjects:
+        weights[s] += 2
+    for s in payload.strongest_subjects:
+        weights[s] = max(1, weights[s] - 1)
     cycle: list[str] = []
     for subject, weight in weights.items():
         cycle.extend([subject] * weight)
@@ -102,9 +104,9 @@ def _build_topic_queues(
             + row["weight_pct"]
             + _class_stage_bonus(payload.current_class_stage, row["class_level"])
         )
-        if subject == payload.weakest_subject:
+        if subject in payload.weakest_subjects:
             chapter_score += 30
-        if subject == payload.strongest_subject:
+        if subject in payload.strongest_subjects:
             chapter_score -= 10
 
         queues[subject].append({
@@ -250,8 +252,8 @@ async def _save_plan_to_db(
             payload.current_class_stage,
             payload.neet_attempt_year,
             _HOURS_TO_NUMERIC[payload.daily_study_hours],
-            payload.strongest_subject,
-            payload.weakest_subject,
+            ",".join(payload.strongest_subjects),
+            ",".join(payload.weakest_subjects),
             _CONFIDENCE_TO_INT[payload.self_confidence_level],
             user_id,
         )
@@ -269,8 +271,8 @@ async def _save_plan_to_db(
             payload.current_class_stage,
             payload.neet_attempt_year,
             _HOURS_TO_NUMERIC[payload.daily_study_hours],
-            payload.strongest_subject,
-            payload.weakest_subject,
+            ",".join(payload.strongest_subjects),
+            ",".join(payload.weakest_subjects),
             _CONFIDENCE_TO_INT[payload.self_confidence_level],
         )
 
@@ -327,8 +329,8 @@ async def build_planning_agent_response(
         days_left=(exam_date - today_date).days,
         daily_study_hours=payload.daily_study_hours,
         preferred_study_time=payload.preferred_study_time,
-        strongest_subject=payload.strongest_subject,
-        weakest_subject=payload.weakest_subject,
+        strongest_subjects=payload.strongest_subjects,
+        weakest_subjects=payload.weakest_subjects,
         self_confidence_level=payload.self_confidence_level,
         generated_plan_days=len(schedule),
     )

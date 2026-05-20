@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field
 
@@ -11,6 +11,8 @@ Subject = Literal["Physics", "Chemistry", "Biology"]
 ConfidenceLevel = Literal["Low", "Medium", "High"]
 StudyTime = Literal["Morning", "Afternoon", "Evening", "Night"]
 
+SubjectList = Annotated[list[Subject], Field(min_length=1, max_length=2)]
+
 
 class PlanningAgentRequest(BaseModel):
     user_id: str = Field(..., min_length=1, max_length=80, description="UUID of the authenticated user")
@@ -18,8 +20,8 @@ class PlanningAgentRequest(BaseModel):
     current_class_stage: ClassStage
     neet_attempt_year: AttemptYear
     daily_study_hours: DailyStudyHours
-    strongest_subject: Subject
-    weakest_subject: Subject
+    strongest_subjects: SubjectList
+    weakest_subjects: SubjectList
     self_confidence_level: ConfidenceLevel
     preferred_study_time: StudyTime
 
@@ -48,8 +50,8 @@ class PlanMetadata(BaseModel):
     days_left: int
     daily_study_hours: DailyStudyHours
     preferred_study_time: StudyTime
-    strongest_subject: Subject
-    weakest_subject: Subject
+    strongest_subjects: list[Subject]
+    weakest_subjects: list[Subject]
     self_confidence_level: ConfidenceLevel
     generated_plan_days: int
 

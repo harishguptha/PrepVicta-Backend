@@ -1,8 +1,6 @@
 import json
 import logging
 import random
-import zipfile
-from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import Response
@@ -69,7 +67,7 @@ async def get_questions(
     paper_year: int = Query(default=2026),
     paper_number: int = Query(default=1),
     subject: str = Query(default="all", max_length=20),
-    count: int = Query(default=45, ge=1, le=180),
+    count: int = Query(default=180, ge=1, le=180),
 ):
     """
     Return shuffled questions from a practice paper.
@@ -114,34 +112,33 @@ async def serve_image(
     paper_number: int = Query(...),
     path: str = Query(..., max_length=300),
 ):
-    """Serve an image from inside the paper's ZIP file."""
+    """Serve an image stored in the DB (deployment-safe, no local ZIP needed)."""
     try:
         pool = await get_pool()
-        zip_path = await pool.fetchval(
-            "SELECT zip_path FROM prepvicta_data.practise_complete_full_test "
-            "WHERE paper_year=$1 AND paper_number=$2 AND zip_path != '' LIMIT 1",
-            paper_year, paper_number,
+
+        # Exact path match (e.g. "images/abc123.jpg")
+        row = await pool.fetchrow(
+            "SELECT img_data, content_type FROM prepvicta_data.practise_images "
+            "WHERE paper_year=$1 AND paper_number=$2 AND img_path=$3",
+            paper_year, paper_number, path,
         )
-        if not zip_path or not Path(zip_path).exists():
-            raise HTTPException(status_code=404, detail="ZIP not found")
 
-        with zipfile.ZipFile(zip_path) as z:
-            # img_path from content_list is like "images/hash.jpg"
-            # actual ZIP path is like "Paper Name/auto/images/hash.jpg"
-            match = next(
-                (n for n in z.namelist() if n.endswith("/" + path) or n.endswith(path)),
-                None,
+        # Fallback: match by filename only in case path prefix differs
+        if not row:
+            filename = path.split("/")[-1]
+            row = await pool.fetchrow(
+                "SELECT img_data, content_type FROM prepvicta_data.practise_images "
+                "WHERE paper_year=$1 AND paper_number=$2 AND img_path LIKE $3",
+                paper_year, paper_number, f"%/{filename}",
             )
-            if not match:
-                raise HTTPException(status_code=404, detail="Image not found in ZIP")
-            img_bytes = z.read(match)
 
-        ext = Path(path).suffix.lower()
-        content_type = _IMG_CONTENT_TYPES.get(ext, "image/jpeg")
-        return Response(content=img_bytes, media_type=content_type)
+        if not row:
+            raise HTTPException(status_code=404, detail="Image not found")
+
+        return Response(content=bytes(row["img_data"]), media_type=row["content_type"])
 
     except HTTPException:
         raise
-    except Exception as exc:
+    except Exception:
         logger.exception("Failed to serve practice test image")
         raise HTTPException(status_code=500, detail="Internal server error")
