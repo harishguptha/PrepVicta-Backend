@@ -39,3 +39,14 @@ PrepVicta-Backend.zip
 .DS_Store
 Thumbs.db
 storage/sample qns/
+
+# One-off utility / debug scripts (not part of app)
+check_ak_output.txt
+check_all_papers.py
+check_answer_key_format.py
+check_img_refs.py
+check_option_format.py
+check_paper4_images.py
+check_zip_structure.py
+cleanup_bad_papers.py
+ingest_practice_test.py

@@ -13,6 +13,7 @@ from app.routers.planning_agent import router as planning_agent_router
 from app.routers.learn import router as learn_router
 from app.routers.revision import router as revision_router
 from app.routers.dashboard import router as dashboard_router
+from app.routers.practice_test import router as practice_test_router
 from app.security import SecurityMiddleware
 
 settings = get_settings()
@@ -51,6 +52,7 @@ app.include_router(auth_router)
 app.include_router(learn_router)
 app.include_router(revision_router)
 app.include_router(dashboard_router)
+app.include_router(practice_test_router)
 
 
 @app.get("/health")

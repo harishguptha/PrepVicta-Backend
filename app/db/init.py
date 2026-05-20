@@ -112,6 +112,30 @@ CREATE TABLE IF NOT EXISTS prepvicta_data.dashboard_ai_insight (
 );
 """
 
+_CREATE_PRACTISE_COMPLETE_FULL_TEST = """
+CREATE TABLE IF NOT EXISTS prepvicta_data.practise_complete_full_test (
+    id             UUID    PRIMARY KEY DEFAULT gen_random_uuid(),
+    paper_name     TEXT    NOT NULL,
+    paper_year     INT     NOT NULL,
+    paper_number   INT     NOT NULL,
+    subject        TEXT    NOT NULL,
+    q_number       INT     NOT NULL,
+    question_text  TEXT    NOT NULL,
+    option_a       TEXT    NOT NULL DEFAULT '',
+    option_b       TEXT    NOT NULL DEFAULT '',
+    option_c       TEXT    NOT NULL DEFAULT '',
+    option_d       TEXT    NOT NULL DEFAULT '',
+    correct_option TEXT    DEFAULT '',
+    solution       TEXT    NOT NULL DEFAULT '',
+    has_image      BOOLEAN NOT NULL DEFAULT false,
+    image_refs     JSONB   NOT NULL DEFAULT '[]',
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (paper_year, paper_number, q_number)
+);
+CREATE INDEX IF NOT EXISTS idx_practise_test_paper
+    ON prepvicta_data.practise_complete_full_test (paper_year, paper_number, subject);
+"""
+
 
 async def init_db(pool: asyncpg.Pool) -> None:
     async with pool.acquire() as conn:
@@ -123,4 +147,5 @@ async def init_db(pool: asyncpg.Pool) -> None:
         await conn.execute(_CREATE_TOPIC_INFOGRAPHIC)
         await conn.execute(_CREATE_TOPIC_FLOWCHART)
         await conn.execute(_CREATE_DASHBOARD_AI_INSIGHT)
+        await conn.execute(_CREATE_PRACTISE_COMPLETE_FULL_TEST)
         await conn.execute(_CREATE_PERFORMANCE_INDEXES)
