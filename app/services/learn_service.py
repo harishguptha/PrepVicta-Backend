@@ -301,6 +301,30 @@ def _normalize_chapter(name: str) -> str:
     return name.strip()
 
 
+def _chapter_variants(name: str) -> list[str]:
+    """Return all plausible spellings of a chapter name to match Pinecone records.
+
+    Zip folder names (source of truth in Pinecone) strip commas and use 'and'
+    instead of '&', so we need to try every combination of those differences.
+    """
+    variants: set[str] = set()
+
+    def _add_with_and_swap(n: str) -> None:
+        variants.add(n)
+        if " & " in n:
+            variants.add(n.replace(" & ", " and "))
+        elif " and " in n:
+            variants.add(n.replace(" and ", " & "))
+
+    _add_with_and_swap(name)
+    # Also try comma-stripped version (folders don't use commas)
+    no_comma = name.replace(", ", " ").replace(",", " ")
+    if no_comma != name:
+        _add_with_and_swap(no_comma)
+
+    return list(variants)
+
+
 async def get_chapter_sections(chapter: str, subject: str) -> list[dict]:
     """Return all unique sections for a chapter from Pinecone (no row-count cap)."""
     chapter = _normalize_chapter(chapter)
@@ -310,8 +334,8 @@ async def get_chapter_sections(chapter: str, subject: str) -> list[dict]:
         return cached
 
     index = _get_index()
-    alt = chapter.replace(' & ', ' and ') if ' & ' in chapter else chapter.replace(' and ', ' & ')
-    chapter_filter = {"$in": [chapter, alt]} if alt != chapter else {"$eq": chapter}
+    variants = _chapter_variants(chapter)
+    chapter_filter = {"$in": variants} if len(variants) > 1 else {"$eq": variants[0]}
     subj_filter = {"$in": ["Biology", "Botany", "Zoology"]} if subject == "Biology" else {"$eq": subject}
 
     results = await asyncio.to_thread(
@@ -422,10 +446,12 @@ async def get_raw_topic_by_chapter_section(chapter: str, section: str) -> dict |
         return cached
 
     index = _get_index()
+    variants = _chapter_variants(chapter)
+    ch_filter = {"$in": variants} if len(variants) > 1 else {"$eq": variants[0]}
     results = await asyncio.to_thread(
         index.search_records,
         namespace=NAMESPACE,
-        query=SearchQuery(inputs={"text": f"{chapter} {section}"}, top_k=1, filter={"chapter": {"$eq": chapter}, "section": {"$eq": section}}),
+        query=SearchQuery(inputs={"text": f"{chapter} {section}"}, top_k=1, filter={"chapter": ch_filter, "section": {"$eq": section}}),
         fields=["text", "chapter", "section", "subject", "class", "image_count", "img_0", "img_1", "img_2", "img_3", "img_4"],
     )
     hits = results.result.hits
